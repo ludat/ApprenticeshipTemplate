@@ -5,3 +5,11 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+a_book = Book.create!(icbn: '123456789', title: 'The alchemist', price: 10)
+another_book = Book.create!(icbn: '987654321', title: 'LOTR', price: 25)
+
+cart = Cart.create!
+
+cart.add a_book, 3
+cart.add another_book, 1

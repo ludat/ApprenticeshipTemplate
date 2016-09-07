@@ -1,7 +1,14 @@
 Rails.application.routes.draw do
+  get 'carts/:id' => 'carts#show'
+  get 'carts' => 'carts#list'
+  post 'carts' => 'carts#create'
+
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
+  resource :books
+  root 'books#show'
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 

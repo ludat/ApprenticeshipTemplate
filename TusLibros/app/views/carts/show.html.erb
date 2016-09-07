@@ -1,0 +1,19 @@
+<h1>Cart</h1>
+<p>Find me in app/views/cart/show.html.erb</p>
+<table>
+  <tr>
+    <th>ICBN</th>
+    <th>Title</th>
+    <th>Price</th>
+  </tr>
+  <% @cart.books.each do |book| %>
+
+      <tr>
+        <td><%= book.icbn %> </td>
+        <td><%= book.title %> </td>
+        <td><%= book.price %> </td>
+      </tr>
+  <% end %>
+</table>
+
+
