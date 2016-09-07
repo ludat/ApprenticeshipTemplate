@@ -5,13 +5,15 @@
     <th>ICBN</th>
     <th>Title</th>
     <th>Price</th>
+    <th>Amount</th>
   </tr>
-  <% @cart.books.each do |book| %>
+  <% @cart.cart_books.each do |order| %>
 
       <tr>
-        <td><%= book.icbn %> </td>
-        <td><%= book.title %> </td>
-        <td><%= book.price %> </td>
+        <td><%= order.book.icbn %> </td>
+        <td><%= order.book.title %> </td>
+        <td><%= order.book.price %> </td>
+        <td><%= order.amount %> </td>
       </tr>
   <% end %>
 </table>
