@@ -5,7 +5,7 @@ describe Cashier do
   let(:cashier) { Cashier.new(merchant_processor) }
 
   context '#price_of' do
-    let(:a_cart) { Cart.create! }
+    let(:a_cart) { create :cart }
 
     subject do
       cashier.price_of(a_cart)
@@ -16,14 +16,14 @@ describe Cashier do
     end
 
     context 'with a 10$ book' do
-      let(:a_book) { Book.create!(icbn: '123456789', title: 'The alchemist', price: 10) }
+      let(:a_book) { create :harry_potter }
 
       context 'added once' do
         before { a_cart.add(a_book, 1) }
         it { is_expected.to be (10*1) }
 
         context 'and another book added three times' do
-          let(:another_book) { Book.create!(icbn: '987654321', title: 'LOTR', price: 25) }
+          let(:another_book) { create :lotr }
           before { a_cart.add(another_book, 3) }
           it { is_expected.to be (25*3+10*1) }
         end
@@ -37,8 +37,8 @@ describe Cashier do
   end
 
   context '#charge' do
-    let(:a_book) { Book.create!(icbn: '123456789', title: 'The alchemist', price: 10) }
-    let(:a_cart) { Cart.create! }
+    let(:a_book) { create :harry_potter }
+    let(:a_cart) { create :cart }
     let(:a_credit_card) { nil }
 
     context 'with no books' do

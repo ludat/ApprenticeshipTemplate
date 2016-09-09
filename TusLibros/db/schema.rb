@@ -11,25 +11,43 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160907214055) do
+ActiveRecord::Schema.define(version: 20160908151851) do
 
   create_table "books", force: :cascade do |t|
+    t.string   "title",      null: false
+    t.string   "icbn",       null: false
+    t.integer  "price",      null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string   "title"
-    t.string   "icbn"
-    t.integer  "price"
   end
 
   create_table "cart_books", force: :cascade do |t|
-    t.integer  "cart_id"
-    t.integer  "book_id"
+    t.integer  "cart_id",                null: false
+    t.integer  "book_id",                null: false
+    t.integer  "amount",     default: 0, null: false
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
-    t.integer  "amount",     default: 0
   end
 
   create_table "carts", force: :cascade do |t|
+    t.integer  "user_id",    null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "credit_cards", force: :cascade do |t|
+    t.string   "number",          null: false
+    t.date     "expiration_date", null: false
+    t.integer  "user_id",         null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "credit_cards", ["user_id"], name: "index_credit_cards_on_user_id"
+
+  create_table "users", force: :cascade do |t|
+    t.string   "name",       null: false
+    t.string   "password",   null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

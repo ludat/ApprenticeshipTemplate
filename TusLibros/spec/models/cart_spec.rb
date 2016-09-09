@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Cart, type: :model do
-  let(:a_cart) { Cart.create! }
-  let(:a_book) { Book.create!(icbn: '123456789', title: 'The alchemist', price: 10) }
+  let(:a_cart) { create(:cart) }
+  let(:a_book) { create(:harry_potter) }
 
   it 'a new cart is empty' do
     expect(a_cart).to be_empty
