@@ -1,0 +1,9 @@
+<% if session[:user] %>
+    <h1> user: <%= session[:user]['name'] %> </h1>
+<% end %>
+
+<%= form_tag do %>
+    <%= text_field_tag :username %>
+    <%= password_field_tag :password %>
+    <%= submit_tag('Login') %>
+<% end %>
