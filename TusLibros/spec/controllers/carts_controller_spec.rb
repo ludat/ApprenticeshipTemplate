@@ -37,11 +37,29 @@ RSpec.describe CartsController, type: :controller do
     end
   end
 
-  describe '#list' do
-    skip 'lelele' do
-      get :index
-      expect(response).to have_http_status(:success)
-      expect(response.body).to be_empty
+  describe 'books inside a cart' do
+    let(:a_cart) { create :cart }
+
+    context 'with an empty cart' do
+      it 'has no books' do
+        get :books, {id: a_cart.id}
+
+        expect(JSON.parse(response.body)).to eq([])
+      end
+    end
+
+    context 'with a cart with one book' do
+      let(:a_book) { create :harry_potter }
+
+      before do
+        a_cart.add a_book, 1
+      end
+
+      it 'has one book' do
+        get :books, {id: a_cart.id}
+
+        expect(JSON.parse(response.body)).to eq([{'isbn' => a_book.isbn, 'amount' => 1}])
+      end
     end
   end
 end

@@ -24,6 +24,12 @@ class CartsController < ApplicationController
     render nothing: true
   end
 
+  def books
+    cart = Cart.find(params['id'])
+
+    render json: cart.cart_books.to_a.map { |o| { 'isbn'=> o.book.isbn, 'amount' => o.amount } }
+  end
+
   def list
     carts = User.find(session[:user_id]).carts
     render template: 'carts/list', locals: {carts: carts}
