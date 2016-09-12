@@ -1,12 +1,7 @@
-<h1>Cart</h1>
+<h1>Cart<a href="/carts/<%= cart.id %>/addBook"><button>Add book</button></a> </h1>
 <table>
-  <tr>
-    <th>ICBN</th>
-    <th>Title</th>
-    <th>Price</th>
-    <th>Amount</th>
-  </tr>
-  <% @cart.cart_books.each do |order| %>
+  <tr> <th>ICBN</th> <th>Title</th> <th>Price</th> <th>Amount</th> </tr>
+  <% cart.cart_books.each do |order| %>
       <tr>
         <td><%= order.book.icbn %> </td>
         <td><%= order.book.title %> </td>

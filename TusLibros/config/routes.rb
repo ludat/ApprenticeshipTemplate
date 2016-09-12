@@ -1,10 +1,14 @@
 Rails.application.routes.draw do
   get 'carts/:id' => 'carts#show'
+
   get 'carts' => 'carts#list'
   post 'carts' => 'carts#create'
 
-  get 'users' => 'users#index'
-  post 'users' => 'users#login'
+  get 'carts/:id/addBook' => 'carts#get_add_book', as: :add_book
+  post 'carts/:id/addBook' => 'carts#add_book'
+
+  get 'login' => 'users#index', as: :login
+  post 'login' => 'users#login'
   # root 'user#login'
 
   # The priority is based upon order of creation: first created -> highest priority.

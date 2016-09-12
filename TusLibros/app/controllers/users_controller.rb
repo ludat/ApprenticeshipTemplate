@@ -1,10 +1,8 @@
 class UsersController < ApplicationController
   def login
-    session[:user] = User.find_by(name: request.params['username'], password: request.params['password'])
-    p session[:user]
-    redirect_to "/users"
+    session[:user_id] = User.find_by(username: request.params['username'], password: request.params['password']).id
+    redirect_to :login
   end
   def index
-    p session[:user]
   end
 end

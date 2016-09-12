@@ -1,10 +1,10 @@
 FactoryGirl.define do
   factory :lucas, class: User do
-    name 'Lucas Traverso'
+    username 'ludat'
     password '123456'
   end
   factory :roberto, class: User do
-    name 'Roberto Random'
+    username 'roberto_random'
     password 'password'
   end
 end
