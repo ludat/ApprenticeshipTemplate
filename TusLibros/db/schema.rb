@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(version: 20160908151851) do
 
   create_table "books", force: :cascade do |t|
     t.string   "title",      null: false
-    t.string   "icbn",       null: false
+    t.string   "isbn",       null: false
     t.integer  "price",      null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

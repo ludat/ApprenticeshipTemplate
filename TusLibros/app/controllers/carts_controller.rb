@@ -1,34 +1,31 @@
 class CartsController < ApplicationController
+  def create
+    user = User.find_by(id: params[:clientId], password: params[:password])
+    return render json: {error: 'invalid user'}, status: :forbidden if user.nil?
+
+    cart = Cart.create!(user: user)
+    render json: cart.as_json(only: [:id]), status: :created
+  end
+
   def show
-    cart = Cart.find(request.params['id'])
-    render template: 'carts/show', locals: {cart: cart}
+    cart = Cart.find(params['id'])
+    render json: cart.as_json(only: [:id])
   end
 
-  def get_add_book
-    books = Book.all
-    cart = Cart.find(request.params['id'])
-    render template: 'carts/add_book', locals: { books: books, cart: cart }
-  end
-
-  def add_book
+  def addBook
     # cartId: Id del carrito creado con /createCart
     # bookIsbn: ISBN del libro que se desea agregar. Debe ser un ISBN de la editorial
     # bookQuantity: Cantidad de libros que se desean agregar. Debe ser >= 1.
-    cart = Cart.find(request.params['cart_id'])
-    book = Book.find_by_icbn(request.params['book_icbn'])
+    cart = Cart.find(request.params['id'])
+    book = Book.find_by_isbn(request.params['bookIsbn'])
 
-    cart.add(book, request.params['book_quantity'].to_i)
+    cart.add(book, request.params['bookQuantity'].to_i)
 
-    get_add_book
+    render nothing: true
   end
 
   def list
     carts = User.find(session[:user_id]).carts
     render template: 'carts/list', locals: {carts: carts}
-  end
-
-  def create
-    cart = Cart.create!(user_id: session[:user_id])
-    redirect_to "/carts/#{cart.id}"
   end
 end

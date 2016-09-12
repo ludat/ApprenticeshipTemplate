@@ -3,7 +3,7 @@
   <tr> <th>ICBN</th> <th>Title</th> <th>Price</th> <th>Amount</th> </tr>
   <% cart.cart_books.each do |order| %>
       <tr>
-        <td><%= order.book.icbn %> </td>
+        <td><%= order.book.isbn %> </td>
         <td><%= order.book.title %> </td>
         <td><%= order.book.price %> </td>
         <td><%= order.amount %> </td>

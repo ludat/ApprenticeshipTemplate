@@ -1,7 +1,7 @@
 <% books.each do |book| %>
     <%= form_tag do %>
         <%= hidden_field_tag :cart_id, cart.id %>
-        <%= hidden_field_tag :book_icbn, book.icbn %>
+        <%= hidden_field_tag :book_icbn, book.isbn %>
         Book: <%= book.title %>
         <%= number_field_tag :book_quantity, 0 %>
         <%= submit_tag('add book') %>
