@@ -5,4 +5,9 @@ class UsersController < ApplicationController
   end
   def index
   end
+
+  def pucharses
+    user = User.find(params['id'])
+    render json: user.pucharses
+  end
 end

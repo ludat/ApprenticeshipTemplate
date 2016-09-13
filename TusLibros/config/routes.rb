@@ -2,14 +2,21 @@ Rails.application.routes.draw do
 
   resources :carts, only: [:create, :show] do
     member do
-      post 'addBook'
+      post 'add_book'
       post 'checkout'
       get 'books'
+      get 'pucharses'
     end
   end
 
-  get 'carts/:id/addBook' => 'carts#get_add_book', as: :add_book
-  post 'carts/:id/addBook' => 'carts#add_book'
+  get 'carts/:id/add_book' => 'carts#get_add_book', as: :add_book
+  post 'carts/:id/add_book' => 'carts#add_book'
+
+  resource :users, only: [] do
+    member do
+      get 'pucharses'
+    end
+end
 
   get 'login' => 'users#index', as: :login
   post 'login' => 'users#login'

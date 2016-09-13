@@ -5,6 +5,7 @@ class Cashier
 
   def charge(cart, to:)
     raise self.class.empty_cart_error_message if cart.empty?
+    raise self.class.invalid_credit_card_error_message unless to.valid?
     @merchant_processor.charge_to(to, price_of(cart))
     cart.destroy!
   end
@@ -13,7 +14,11 @@ class Cashier
     cart.cart_books.map { |order| order.book.price * order.amount }.reduce(0, :+)
   end
 
+  def self.invalid_credit_card_error_message
+    'The credit card is not valid'
+  end
+
   def self.empty_cart_error_message
-    "The cart can't be empty"
+    'The cart can not be empty'
   end
 end

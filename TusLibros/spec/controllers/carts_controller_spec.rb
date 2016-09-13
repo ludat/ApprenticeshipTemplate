@@ -19,7 +19,7 @@ RSpec.describe CartsController, type: :controller do
 
   describe '#show' do
     let(:a_cart) { create :cart }
-    skip 'returns the cart' do
+    it 'returns the cart' do
       get :show, {id: a_cart.id}
       expect(response).to have_http_status(:success)
       expect(JSON.parse(response.body)).to eq({'id' => a_cart.id})
@@ -30,7 +30,7 @@ RSpec.describe CartsController, type: :controller do
     let(:a_cart) { create :cart }
     let(:a_book) { create :harry_potter }
     it 'can hold an item' do
-      post :addBook, {id: a_cart.id, bookIsbn: a_book.isbn, bookQuantity: 1}
+      post :add_book, {id: a_cart.id, bookIsbn: a_book.isbn, bookQuantity: 1}
 
       expect(response).to have_http_status(:success)
       expect(a_cart).not_to be_empty
@@ -64,23 +64,65 @@ RSpec.describe CartsController, type: :controller do
   end
 
   describe '#checkout' do
-    let(:a_cart) { create :cart }
     let(:a_book) { create :harry_potter }
+    let(:a_cart) { create :cart }
     let(:a_credit_card) { create :credit_card }
 
-    before do
-      a_cart.add(a_book, 1)
-    end
-    it 'ceases to exist after checkout' do
+    subject do
       post :checkout, {
           id: a_cart.id,
-          ccn: 'Número de tarjeta de credito',
-          cced: 'Fecha de expiración con 2 digitos para el mes y 4 para el año',
-          cco: 'Nombre del dueño de la tarjeta',
+          ccn: a_credit_card.number,
+          cced: a_credit_card.expiration_date,
+          cco: a_credit_card.user,
       }
+    end
 
-      expect(response).to have_http_status(:success)
-      expect(Cart.all).not_to include a_cart
+    context 'with a cart with things' do
+      before do
+        a_cart.add(a_book, 1)
+      end
+
+      it 'does not exist after checkout' do
+        subject
+
+        expect(response).to have_http_status(:ok)
+        expect(Cart.all).not_to include a_cart
+      end
+
+      context 'with an invalid credit card' do
+        let(:a_credit_card) { build :expired_credit_card }
+
+        it 'returns an error' do
+          subject
+
+          expect(response).to have_http_status(:bad_request)
+          expect(JSON.parse(response.body)).to eq({'error' => Cashier.invalid_credit_card_error_message})
+        end
+      end
+    end
+
+    context 'with a cart with no books' do
+      it 'return a bad request error' do
+        subject
+
+        expect(response).to have_http_status(:bad_request)
+        expect(JSON.parse(response.body)).to eq({'error' => Cashier.empty_cart_error_message})
+      end
+    end
+  end
+
+  context 'with a valid cart' do
+    let!(:a_cart) { create :cart }
+    context 'after 30 minutes' do
+      before do
+        Timecop.travel(30.minutes.from_now)
+      end
+      it 'I can not do anything to it' do
+        get :books, {id: a_cart.id}
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(JSON.parse(response.body)).to eq({'error' => CartsController.expired_cart_error_message})
+      end
     end
   end
 end

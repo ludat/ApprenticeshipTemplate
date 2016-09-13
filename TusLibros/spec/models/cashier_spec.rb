@@ -39,7 +39,7 @@ describe Cashier do
   context '#charge' do
     let(:a_book) { create :harry_potter }
     let(:a_cart) { create :cart }
-    let(:a_credit_card) { nil }
+    let(:a_credit_card) { create :credit_card }
 
     context 'with no books' do
 
