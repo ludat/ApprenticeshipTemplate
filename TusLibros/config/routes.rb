@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resources :carts, only: [:create, :show] do
     member do
       post 'addBook'
+      post 'checkout'
       get 'books'
     end
   end

@@ -6,6 +6,7 @@ class Cashier
   def charge(cart, to:)
     raise self.class.empty_cart_error_message if cart.empty?
     @merchant_processor.charge_to(to, price_of(cart))
+    cart.destroy!
   end
 
   def price_of(cart)

@@ -62,4 +62,25 @@ RSpec.describe CartsController, type: :controller do
       end
     end
   end
+
+  describe '#checkout' do
+    let(:a_cart) { create :cart }
+    let(:a_book) { create :harry_potter }
+    let(:a_credit_card) { create :credit_card }
+
+    before do
+      a_cart.add(a_book, 1)
+    end
+    it 'ceases to exist after checkout' do
+      post :checkout, {
+          id: a_cart.id,
+          ccn: 'Número de tarjeta de credito',
+          cced: 'Fecha de expiración con 2 digitos para el mes y 4 para el año',
+          cco: 'Nombre del dueño de la tarjeta',
+      }
+
+      expect(response).to have_http_status(:success)
+      expect(Cart.all).not_to include a_cart
+    end
+  end
 end
