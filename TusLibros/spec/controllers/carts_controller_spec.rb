@@ -7,20 +7,20 @@ RSpec.describe CartsController, type: :controller do
     it 'return a cart as json' do
       post :create, {clientId: a_user.id, password: a_user.password}
       expect(response).to have_http_status(:created)
-      expect(JSON.parse(response.body)).to eq({ 'id' => 1 })
+      expect(JSON.parse(response.body)).to eq({'id' => 1})
     end
 
     it 'fails when the password is wrong' do
       post :create, {clientId: a_user.id, password: a_user.password + 'j'}
       expect(response).to have_http_status(:forbidden)
-      expect(JSON.parse(response.body)).to eq({ 'error' => 'invalid user' })
+      expect(JSON.parse(response.body)).to eq({'error' => 'invalid user'})
     end
   end
 
   describe '#show' do
     let(:a_cart) { create :cart }
     skip 'returns the cart' do
-      get :show, { id: a_cart.id }
+      get :show, {id: a_cart.id}
       expect(response).to have_http_status(:success)
       expect(JSON.parse(response.body)).to eq({'id' => a_cart.id})
     end
@@ -28,16 +28,16 @@ RSpec.describe CartsController, type: :controller do
 
   describe '#addToCart' do
     let(:a_cart) { create :cart }
-    let(:a_book) { create :harry_potter}
+    let(:a_book) { create :harry_potter }
     it 'can hold an item' do
-      post :addBook, { id: a_cart.id, bookIsbn: a_book.isbn, bookQuantity: 1 }
+      post :addBook, {id: a_cart.id, bookIsbn: a_book.isbn, bookQuantity: 1}
 
       expect(response).to have_http_status(:success)
       expect(a_cart).not_to be_empty
     end
   end
 
-  describe 'books inside a cart' do
+  describe '#books' do
     let(:a_cart) { create :cart }
 
     context 'with an empty cart' do
