@@ -18,7 +18,7 @@ RSpec.describe CartsController, type: :controller do
   end
 
   describe '#show' do
-    let(:a_cart) { create :cart }
+    let(:a_cart) { create :cart_session }
     it 'returns the cart' do
       get :show, {id: a_cart.id}
       expect(response).to have_http_status(:success)
@@ -27,7 +27,7 @@ RSpec.describe CartsController, type: :controller do
   end
 
   describe '#addToCart' do
-    let(:a_cart) { create :cart }
+    let(:a_cart) { create :cart_session }
     let(:a_book) { create :harry_potter }
     it 'can hold an item' do
       post :add_book, {id: a_cart.id, bookIsbn: a_book.isbn, bookQuantity: 1}
@@ -38,7 +38,7 @@ RSpec.describe CartsController, type: :controller do
   end
 
   describe '#books' do
-    let(:a_cart) { create :cart }
+    let(:a_cart) { create :cart_session }
 
     context 'with an empty cart' do
       it 'has no books' do
@@ -65,7 +65,7 @@ RSpec.describe CartsController, type: :controller do
 
   describe '#checkout' do
     let(:a_book) { create :harry_potter }
-    let(:a_cart) { create :cart }
+    let(:a_cart) { create :cart_session }
     let(:a_credit_card) { create :credit_card }
 
     subject do
@@ -112,7 +112,7 @@ RSpec.describe CartsController, type: :controller do
   end
 
   context 'with a valid cart' do
-    let!(:a_cart) { create :cart }
+    let!(:a_cart) { create :cart_session }
     context 'after 30 minutes' do
       before do
         Timecop.travel(30.minutes.from_now)

@@ -6,20 +6,17 @@ class CartsController < ApplicationController
     user = User.find_by(id: params[:clientId], password: params[:password])
     return render json: {error: 'invalid user'}, status: :forbidden if user.nil?
 
-    cart = Cart.create!(user: user)
+    cart = CartSession.for(user)
     render json: cart.as_json(only: [:id]), status: :created
   end
 
   def show
-    cart = Cart.find(params['id'])
+    cart = CartSession.find(params['id'])
     render json: cart.as_json(only: [:id])
   end
 
   def add_book
-    # cartId: Id del carrito creado con /createCart
-    # bookIsbn: ISBN del libro que se desea agregar. Debe ser un ISBN de la editorial
-    # bookQuantity: Cantidad de libros que se desean agregar. Debe ser >= 1.
-    cart = Cart.find(request.params['id'])
+    cart = CartSession.find(request.params['id'])
     book = Book.find_by_isbn(request.params['bookIsbn'])
 
     cart.add(book, request.params['bookQuantity'].to_i)
@@ -28,13 +25,13 @@ class CartsController < ApplicationController
   end
 
   def books
-    cart = Cart.find(params['id'])
+    cart = CartSession.find(params['id'])
 
     render json: cart.cart_books.to_a.map { |o| {'isbn' => o.book.isbn, 'amount' => o.amount} }
   end
 
   def checkout
-    cart = Cart.find(params['id'])
+    cart = CartSession.find(params['id'])
     cashier = Cashier.new(MerchantProcessor.new)
     credit_card = CreditCard.new(
         number: params['ccn'],
@@ -53,7 +50,7 @@ class CartsController < ApplicationController
 
   private
   def assert_cart_is_active
-    if not Cart.find(params['id']).active?
+    if not CartSession.find(params['id']).active?
       render json: {error: self.class.expired_cart_error_message}, status: :unprocessable_entity
     end
   end
