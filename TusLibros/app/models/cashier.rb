@@ -4,13 +4,24 @@ class Cashier
   end
 
   def charge(cart, to:)
-    raise self.class.empty_cart_error_message if cart.empty?
-    raise self.class.invalid_credit_card_error_message unless to.valid?
+    assert_cart_is_not_empty(cart)
+    assert_credit_card_is_valid_and_save_it(to)
+
     @merchant_processor.charge_to(to, price_of(cart))
 
     record_sales_from_cart(cart)
 
     cart.destroy!
+  end
+
+  def assert_cart_is_not_empty(cart)
+    raise self.class.empty_cart_error_message if cart.empty?
+  end
+
+  def assert_credit_card_is_valid_and_save_it(to)
+    raise self.class.invalid_credit_card_error_message unless to.valid?
+
+    to.save!
   end
 
   def record_sales_from_cart(cart)

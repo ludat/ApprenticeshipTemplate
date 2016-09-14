@@ -13,7 +13,7 @@ RSpec.describe UsersController, type: :controller do
 
   context 'with a valid user' do
     let(:a_user) { create :lucas }
-    let(:a_credit_card) { create :credit_card, user: a_user}
+    let(:a_credit_card) { create :credit_card, user: a_user }
     let(:a_cart) { create :cart_session, user: a_user }
     let(:a_book) { create :harry_potter }
 

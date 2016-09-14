@@ -34,6 +34,7 @@ class CartsController < ApplicationController
     cart = CartSession.find(params['id'])
     cashier = Cashier.new(MerchantProcessor.new)
     credit_card = CreditCard.new(
+        user: cart.user,
         number: params['ccn'],
         expiration_date: params['cced'],
         # cco: params['cco']
