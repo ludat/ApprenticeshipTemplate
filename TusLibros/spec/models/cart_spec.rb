@@ -16,6 +16,10 @@ RSpec.describe Cart, type: :model do
     expect(a_cart.occurrences_of(a_book)).to be 0
   end
 
+  it 'can not add zero books to a cart' do
+    expect { a_cart.add(a_book, 0) }.to raise_error ActiveRecord::RecordInvalid
+  end
+
   context 'with a book' do
 
     before do

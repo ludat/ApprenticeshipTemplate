@@ -3,7 +3,7 @@ class Cart < ActiveRecord::Base
   has_many :cart_books
 
   def add(a_book, amount)
-    order = CartBook.find_or_create_by!(cart: self, book: a_book)
+    order = cart_books.find_or_initialize_by(book: a_book)
     order.amount += amount
     order.save!
   end

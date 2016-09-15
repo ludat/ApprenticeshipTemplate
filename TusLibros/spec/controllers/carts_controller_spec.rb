@@ -51,6 +51,13 @@ RSpec.describe CartsController, type: :controller do
       expect(response).to have_http_status(:success)
       expect(a_cart).not_to be_empty
     end
+
+    it 'can not add zero books to a cart' do
+      post :add_book, {id: a_cart.id, bookIsbn: a_book.isbn, bookQuantity: 0}
+
+      expect(response).to have_http_status(:bad_request)
+      expect(JSON.parse(response.body)).to eq({'error' => 'Validation failed: Amount must be greater than 0'})
+    end
   end
 
   describe '#books' do
