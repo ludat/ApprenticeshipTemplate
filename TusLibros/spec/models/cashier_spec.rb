@@ -48,7 +48,7 @@ describe Cashier do
       end
 
       it "raise error with message #{Cashier.empty_cart_error_message}" do
-        expect { subject }.to raise_error RuntimeError, Cashier.empty_cart_error_message
+        expect { subject }.to raise_error Cashier::CartEmptyException, Cashier.empty_cart_error_message
       end
     end
 

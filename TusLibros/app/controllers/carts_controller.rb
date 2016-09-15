@@ -1,10 +1,25 @@
 class CartsController < ApplicationController
 
-  before_action :assert_cart_is_active, only: [:show, :add_book, :books, :checkout]
+  around_action :handle_exception
+
+  def handle_exception
+    begin
+      yield
+    rescue ActiveRecord::RecordNotFound => e
+      render json: {error: e.message}, status: :not_found
+    rescue User::BadCredentialsException => e
+      render json: {error: e.message}, status: :unauthorized
+    rescue Cashier::CartEmptyException => e
+      render json: {error: e.message}, status: :bad_request
+    rescue CartSession::ExpiredException => e
+      render json: {error: e.message}, status: :unprocessable_entity
+    rescue ActiveRecord::RecordInvalid => e
+      render json: {error: e.message}, status: :bad_request
+    end
+  end
 
   def create
-    user = User.find_by(id: params[:clientId], password: params[:password])
-    return render json: {error: 'invalid user'}, status: :forbidden if user.nil?
+    user = User.login(id: params[:clientId], password: params[:password])
 
     cart = CartSession.for(user)
     render json: cart.as_json(only: [:id]), status: :created
@@ -40,23 +55,7 @@ class CartsController < ApplicationController
         # cco: params['cco']
     )
 
-    begin
-      cashier.charge cart, to: credit_card
-    rescue RuntimeError => e
-      render json: {error: e.message}, status: 400
-    else
-      render json: {}
-    end
-  end
-
-  private
-  def assert_cart_is_active
-    if not CartSession.find(params['id']).active?
-      render json: {error: self.class.expired_cart_error_message}, status: :unprocessable_entity
-    end
-  end
-
-  def self.expired_cart_error_message
-    'This cart has already expired'
+    cashier.charge cart, to: credit_card
+    render json: {}
   end
 end

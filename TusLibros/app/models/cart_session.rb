@@ -27,7 +27,10 @@ class CartSession < ActiveRecord::Base
   end
 
   def assert_active_session
-    raise self.class.expired_cart_error_message unless active?
+    raise ExpiredException, self.class.expired_cart_error_message unless active?
+  end
+
+  class ExpiredException < Exception;
   end
 
   def self.expired_cart_error_message

@@ -5,7 +5,7 @@ class Cart < ActiveRecord::Base
   def add(a_book, amount)
     order = CartBook.find_or_create_by!(cart: self, book: a_book)
     order.amount += amount
-    order.save
+    order.save!
   end
 
   def empty?
@@ -18,6 +18,6 @@ class Cart < ActiveRecord::Base
 
   def occurrences_of(a_book)
     # TODO high evilness warning, I'd love to have the maybe monad but all I have is the list monad
-    self.cart_books.select { |order| order.book == a_book }.reduce(0) {|_, order| order.amount }
+    self.cart_books.select { |order| order.book == a_book }.reduce(0) { |_, order| order.amount }
   end
 end

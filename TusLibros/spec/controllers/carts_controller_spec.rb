@@ -12,8 +12,8 @@ RSpec.describe CartsController, type: :controller do
 
     it 'fails when the password is wrong' do
       post :create, {clientId: a_user.id, password: a_user.password + 'j'}
-      expect(response).to have_http_status(:forbidden)
-      expect(JSON.parse(response.body)).to eq({'error' => 'invalid user'})
+      expect(response).to have_http_status(:unauthorized)
+      expect(JSON.parse(response.body)).to eq({'error' => 'Invalid credentials'})
     end
   end
 
@@ -96,7 +96,7 @@ RSpec.describe CartsController, type: :controller do
           subject
 
           expect(response).to have_http_status(:bad_request)
-          expect(JSON.parse(response.body)).to eq({'error' => Cashier.invalid_credit_card_error_message})
+          expect(JSON.parse(response.body)).to eq({'error' => 'Validation failed: Expiration date The credit card has already expired'})
         end
       end
     end
@@ -121,7 +121,7 @@ RSpec.describe CartsController, type: :controller do
         get :books, {id: a_cart.id}
 
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(JSON.parse(response.body)).to eq({'error' => CartsController.expired_cart_error_message})
+        expect(JSON.parse(response.body)).to eq({'error' => CartSession.expired_cart_error_message})
       end
     end
   end
