@@ -6,14 +6,30 @@ RSpec.describe CartsController, type: :controller do
     let(:a_user) { create :lucas }
     it 'return a cart as json' do
       post :create, {clientId: a_user.id, password: a_user.password}
+
       expect(response).to have_http_status(:created)
       expect(JSON.parse(response.body)).to eq({'id' => 1})
     end
 
     it 'fails when the password is wrong' do
       post :create, {clientId: a_user.id, password: a_user.password + 'j'}
+
       expect(response).to have_http_status(:unauthorized)
       expect(JSON.parse(response.body)).to eq({'error' => 'Invalid credentials'})
+    end
+
+    it 'returns bad request when password is not set' do
+      post :create, {clientId: a_user.id}
+
+      expect(response).to have_http_status(:bad_request)
+      expect(JSON.parse(response.body)).to eq({'error' => 'param is missing or the value is empty: password'})
+    end
+
+    it 'returns bad request when password is not set' do
+      post :create, {password: a_user.password}
+
+      expect(response).to have_http_status(:bad_request)
+      expect(JSON.parse(response.body)).to eq({'error' => 'param is missing or the value is empty: clientId'})
     end
   end
 

@@ -5,6 +5,8 @@ class CartsController < ApplicationController
   def handle_exception
     begin
       yield
+    rescue ActionController::ParameterMissing => e
+      render json: {error: e.message}, status: :bad_request
     rescue ActiveRecord::RecordNotFound => e
       render json: {error: e.message}, status: :not_found
     rescue User::BadCredentialsException => e
@@ -19,39 +21,43 @@ class CartsController < ApplicationController
   end
 
   def create
-    user = User.login(id: params[:clientId], password: params[:password])
+    user = User.login(**user_credentials_params)
 
     cart = CartSession.for(user)
     render json: cart.as_json(only: [:id]), status: :created
   end
 
+  def user_credentials_params
+    {id: params.require(:clientId), password: params.require(:password) }
+  end
+
   def show
-    cart = CartSession.find(params['id'])
+    cart = CartSession.find(params.require(:id))
     render json: cart.as_json(only: [:id])
   end
 
   def add_book
-    cart = CartSession.find(request.params['id'])
-    book = Book.find_by_isbn(request.params['bookIsbn'])
+    cart = CartSession.find(params.require(:id))
+    book = Book.find_by_isbn(params.require(:bookIsbn))
 
-    cart.add(book, request.params['bookQuantity'].to_i)
+    cart.add(book, params.require(:bookQuantity).to_i)
 
     render nothing: true
   end
 
   def books
-    cart = CartSession.find(params['id'])
+    cart = CartSession.find(params.require(:id))
 
     render json: cart.cart_books.to_a.map { |o| {'isbn' => o.book.isbn, 'amount' => o.amount} }
   end
 
   def checkout
-    cart = CartSession.find(params['id'])
+    cart = CartSession.find(params.require(:id))
     cashier = Cashier.new(MerchantProcessor.new)
     credit_card = CreditCard.new(
         user: cart.user,
-        number: params['ccn'],
-        expiration_date: params['cced'],
+        number: params.require(:ccn),
+        expiration_date: params.require(:cced),
         # cco: params['cco']
     )
 
