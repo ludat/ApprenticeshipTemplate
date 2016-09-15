@@ -9,14 +9,15 @@ Rails.application.routes.draw do
     end
   end
 
-  get 'carts/:id/add_book' => 'carts#get_add_book', as: :add_book
-  post 'carts/:id/add_book' => 'carts#add_book'
-
-  resource :users, only: [] do
+  resources :users, only: [] do
     member do
       get 'pucharses'
     end
-end
+  end
+
+  resources :books, only: [:index]
+
+  # get 'books' => 'books#index'
 
   get 'login' => 'users#index', as: :login
   post 'login' => 'users#login'

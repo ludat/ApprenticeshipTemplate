@@ -1,9 +1,6 @@
 class BooksController < ApplicationController
-
-  def show
-    @books = Book.all
-    render 'all'
-  end
-  def new
+  def index
+    books = Book.all
+    render json: books.map { |book| {isbn: book.isbn}}
   end
 end
