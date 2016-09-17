@@ -5,7 +5,7 @@ class Cashier
 
   def charge(cart, to:)
     assert_cart_is_not_empty(cart)
-    assert_credit_card_is_valid_and_save_it(to)
+    to.save!
 
     @merchant_processor.charge_to(to, price_of(cart))
 
@@ -15,14 +15,9 @@ class Cashier
   end
 
   def assert_cart_is_not_empty(cart)
-    raise CartEmptyException, self.class.empty_cart_error_message if cart.empty?
+    raise EmptyCartException, self.class.empty_cart_error_message if cart.empty?
   end
 
-  def assert_credit_card_is_valid_and_save_it(to)
-    # raise self.class.invalid_credit_card_error_message unless to.valid?
-
-    to.save!
-  end
 
   def record_sales_from_cart(cart)
     cart.cart_books.each { |order|
@@ -35,7 +30,7 @@ class Cashier
     cart.cart_books.map { |order| order.book.price * order.amount }.reduce(0, :+)
   end
 
-  class CartEmptyException < Exception
+  class EmptyCartException < Exception
   end
 
   def self.invalid_credit_card_error_message

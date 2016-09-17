@@ -21,8 +21,6 @@ class User < ActiveRecord::Base
   end
 
   def pucharses
-    Sale.where(user: self).map { |sale|
-      {isbn: sale.book.isbn, amount: sale.amount}
-    }
+    Sale.where(user: self)
   end
 end

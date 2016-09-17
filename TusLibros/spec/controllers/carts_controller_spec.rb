@@ -58,6 +58,20 @@ RSpec.describe CartsController, type: :controller do
       expect(response).to have_http_status(:bad_request)
       expect(JSON.parse(response.body)).to eq({'error' => 'Validation failed: Amount must be greater than 0'})
     end
+
+    it 'can not add a negative number of books' do
+      post :add_book, {id: a_cart.id, bookIsbn: a_book.isbn, bookQuantity: -20}
+
+      expect(response).to have_http_status(:bad_request)
+      expect(JSON.parse(response.body)).to eq({'error' => 'Validation failed: Amount must be greater than 0'})
+    end
+
+    it 'can not add a j number of books' do
+      post :add_book, {id: a_cart.id, bookIsbn: a_book.isbn, bookQuantity: 'j'}
+
+      expect(response).to have_http_status(:bad_request)
+      expect(JSON.parse(response.body)).to eq({'error' => 'Validation failed: Amount must be greater than 0'})
+    end
   end
 
   describe '#books' do

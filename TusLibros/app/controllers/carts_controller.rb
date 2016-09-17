@@ -1,30 +1,12 @@
 class CartsController < ApplicationController
 
-  around_action :handle_exception
-
-  def handle_exception
-    begin
-      yield
-    rescue ActionController::ParameterMissing => e
-      render json: {error: e.message}, status: :bad_request
-    rescue ActiveRecord::RecordNotFound => e
-      render json: {error: e.message}, status: :not_found
-    rescue User::BadCredentialsException => e
-      render json: {error: e.message}, status: :unauthorized
-    rescue Cashier::CartEmptyException => e
-      render json: {error: e.message}, status: :bad_request
-    rescue CartSession::ExpiredException => e
-      render json: {error: e.message}, status: :unprocessable_entity
-    rescue ActiveRecord::RecordInvalid => e
-      render json: {error: e.message}, status: :bad_request
-    end
-  end
+  include CartControllerExceptionHandler
 
   def create
     user = User.login(**user_credentials_params)
 
     cart = CartSession.for(user)
-    render json: cart.as_json(only: [:id]), status: :created
+    render json: cart, status: :created
   end
 
   def user_credentials_params
@@ -33,7 +15,7 @@ class CartsController < ApplicationController
 
   def show
     cart = CartSession.find(params.require(:id))
-    render json: cart.as_json(only: [:id])
+    render json: cart
   end
 
   def add_book
@@ -48,7 +30,7 @@ class CartsController < ApplicationController
   def books
     cart = CartSession.find(params.require(:id))
 
-    render json: cart.cart_books.to_a.map { |o| {'isbn' => o.book.isbn, 'amount' => o.amount} }
+    render json: cart.cart_books
   end
 
   def checkout
