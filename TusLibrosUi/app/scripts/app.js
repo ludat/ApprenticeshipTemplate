@@ -21,8 +21,11 @@ angular
         $routeProvider
             .when('/login', {
                 templateUrl: 'views/login.html',
-                controller: 'LoginCtrl',
-                controllerAs: 'login'
+                controller: 'LoginController'
+            })
+            .when('/carts/:cartId', {
+                templateUrl: 'views/cart.html',
+                controller: 'CartController'
             })
             .otherwise({
                 redirectTo: '/login'
