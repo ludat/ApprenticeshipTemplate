@@ -1,0 +1,7 @@
+<p>This is the login view.</p>
+<form novalidate>
+    id: <input ng-model="username"/><br/>
+    password: <input type="password" ng-model="password"/><br/>
+    <p>{{password | json}}</p>
+    <input type="submit" ng-click="submit(username, password)" ></input>
+</form>
