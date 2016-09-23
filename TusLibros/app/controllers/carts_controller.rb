@@ -20,9 +20,9 @@ class CartsController < ApplicationController
 
   def add_book
     cart = CartSession.find(params.require(:id))
-    book = Book.find_by_isbn!(params.require(:bookIsbn))
+    book = Book.find_by_isbn!(params.require(:isbn))
 
-    cart.add(book, params.require(:bookQuantity).to_i)
+    cart.add(book, params.require(:amount).to_i)
 
     render nothing: true
   end
