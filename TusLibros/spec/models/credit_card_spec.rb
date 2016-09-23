@@ -17,6 +17,14 @@ RSpec.describe CreditCard, type: :model do
     it { is_expected.not_to be_valid }
   end
 
+  context 'a credit card with an invalid number can not be created' do
+    subject do
+      build(:credit_card, number: 'j' * 16)
+    end
+
+    it { is_expected.not_to be_valid }
+  end
+
   context 'a credit card with an expired date can not be created' do
     subject do
       build(:credit_card, expiration_date: 7.days.ago)

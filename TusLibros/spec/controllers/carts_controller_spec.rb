@@ -8,7 +8,7 @@ RSpec.describe CartsController, type: :controller do
       post :create, {clientId: a_user.id, password: a_user.password}
 
       expect(response).to have_http_status(:created)
-      expect(JSON.parse(response.body)).to eq({'id' => 1})
+      expect(JSON.parse(response.body)).to eq({'id' => 1, 'content' => []})
     end
 
     it 'fails when the password is wrong' do
@@ -38,7 +38,30 @@ RSpec.describe CartsController, type: :controller do
     it 'returns the cart' do
       get :show, {id: a_cart.id}
       expect(response).to have_http_status(:success)
-      expect(JSON.parse(response.body)).to eq({'id' => a_cart.id})
+      expect(JSON.parse(response.body)).to eq({'id' => a_cart.id, 'content' => []})
+    end
+
+    context 'with one book' do
+      let(:a_book) { create :lotr }
+      it 'has one book' do
+        a_cart.add(a_book, 1)
+        get :show, {id: a_cart.id}
+
+        expect(response).to have_http_status(:success)
+        expect(JSON.parse(response.body)).to eq(
+                                                 {
+                                                     'id' => a_cart.id,
+                                                     'content' => [
+                                                         {
+                                                             'amount' => 1,
+                                                             'isbn' => a_book.isbn,
+                                                             'title' => a_book.title,
+                                                             'price' => a_book.price
+                                                         }
+                                                     ]
+                                                 }
+                                             )
+      end
     end
   end
 
@@ -72,6 +95,13 @@ RSpec.describe CartsController, type: :controller do
       expect(response).to have_http_status(:bad_request)
       expect(JSON.parse(response.body)).to eq({'error' => 'Validation failed: Amount must be greater than 0'})
     end
+
+    it 'can not add a book that does not exist' do
+      post :add_book, {id: a_cart.id, bookIsbn: a_book.isbn + 'j', bookQuantity: 1}
+
+      expect(response).to have_http_status(:not_found)
+      expect(JSON.parse(response.body)).to eq({'error' => "Couldn't find Book"})
+    end
   end
 
   describe '#books' do
@@ -95,7 +125,13 @@ RSpec.describe CartsController, type: :controller do
       it 'has one book' do
         get :books, {id: a_cart.id}
 
-        expect(JSON.parse(response.body)).to eq([{'isbn' => a_book.isbn, 'amount' => 1}])
+        expect(JSON.parse(response.body))
+            .to eq([{
+                        "amount" => 1,
+                        "title" => "Harry Potter",
+                        "isbn" => "123456789",
+                        "price" => 10
+                    }])
       end
     end
   end
@@ -117,22 +153,24 @@ RSpec.describe CartsController, type: :controller do
     context 'with a cart with things' do
       before do
         a_cart.add(a_book, 1)
+        subject
       end
 
       it 'does not exist after checkout' do
-        subject
-
-        expect(response).to have_http_status(:ok)
         expect(Cart.all).not_to include a_cart
+      end
+
+      it 'responds with the right code' do
+        expect(response).to have_http_status(:ok)
       end
 
       context 'with an invalid credit card' do
         let(:a_credit_card) { build :expired_credit_card }
 
         it 'returns an error' do
-          subject
-
           expect(response).to have_http_status(:bad_request)
+        end
+        it 'has the right error response' do
           expect(JSON.parse(response.body)).to eq({'error' => 'Validation failed: Expiration date The credit card has already expired'})
         end
       end
@@ -148,7 +186,74 @@ RSpec.describe CartsController, type: :controller do
     end
   end
 
-  context 'with a valid cart' do
+  context 'when the credit card' do
+    let(:a_book) { create :harry_potter }
+    let(:credit_card) { create :credit_card }
+    let(:number) { credit_card.number }
+    let(:expiration_date) { credit_card.expiration_date }
+    let(:user) { credit_card.user }
+
+    let(:a_cart_with_things) do
+      cart = create(:cart_session)
+      cart.add(a_book, 1)
+      cart
+    end
+
+    subject do
+      post :checkout, {
+          id: a_cart_with_things.id,
+          ccn: number,
+          cced: expiration_date,
+          cco: user,
+      }
+    end
+
+    context 'has an invalid number' do
+      let(:number) { 'j' * 16 }
+      before { subject }
+
+      it 'the still exists' do
+        expect(CartSession.all).to include a_cart_with_things
+      end
+      it 'the response is bad request' do
+        expect(response).to have_http_status(:bad_request)
+      end
+      it 'the error message is the appropriate one' do
+        expect(JSON.parse(response.body)).to eq({'error' => 'Validation failed: Number Invalid credit card'})
+      end
+    end
+    context 'has an invalid expiration date' do
+      let(:expiration_date) { 'jjjjjj' }
+      before { subject }
+
+      it 'the still exists' do
+        expect(CartSession.all).to include a_cart_with_things
+      end
+      it 'the response is bad request' do
+        expect(response).to have_http_status(:bad_request)
+      end
+      it 'the error message is the appropriate one' do
+        expect(JSON.parse(response.body)).to eq({'error' => 'invalid date'})
+      end
+    end
+    context 'has an expired credit card' do
+      let(:a_date) { 7.months.ago }
+      let(:expiration_date) { "#{a_date.year}/#{a_date.month}"}
+      before { subject }
+
+      it 'the still exists' do
+        expect(CartSession.all).to include a_cart_with_things
+      end
+      it 'the response is bad request' do
+        expect(response).to have_http_status(:bad_request)
+      end
+      it 'the error message is the appropriate one' do
+        expect(JSON.parse(response.body)).to eq({'error' => 'Validation failed: Expiration date The credit card has already expired'})
+      end
+    end
+  end
+
+  context 'with an empty cart' do
     let!(:a_cart) { create :cart_session }
     context 'after 30 minutes' do
       before do

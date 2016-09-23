@@ -20,9 +20,17 @@ RSpec.describe BooksController, type: :controller do
 
       expect(response).to have_http_status(:ok)
       expect(JSON.parse(response.body)).to eq([
-                                                  {'isbn' => a_book.isbn},
-                                                  {'isbn' => another_book.isbn}
-                                              ])
+                                                  {
+                                                      "isbn" => "123456789",
+                                                      "price" => 10,
+                                                      "title" => "Harry Potter"
+                                                  }, {
+                                                      "isbn" => "987654321",
+                                                      "price" => 25,
+                                                      "title" => "Lord of The Rings"
+                                                  }
+                                              ]
+                                           )
     end
   end
 end

@@ -1,10 +1,8 @@
 class CartBook < ActiveRecord::Base
-  belongs_to :book
   belongs_to :cart
-
-  def isbn
-    book.isbn
-  end
+  belongs_to :book
 
   validates :amount, numericality: {greater_than: 0}
+
+  delegate :isbn, :price, :title, to: :book
 end

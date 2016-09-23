@@ -20,7 +20,7 @@ class CartsController < ApplicationController
 
   def add_book
     cart = CartSession.find(params.require(:id))
-    book = Book.find_by_isbn(params.require(:bookIsbn))
+    book = Book.find_by_isbn!(params.require(:bookIsbn))
 
     cart.add(book, params.require(:bookQuantity).to_i)
 
@@ -39,7 +39,7 @@ class CartsController < ApplicationController
     credit_card = CreditCard.new(
         user: cart.user,
         number: params.require(:ccn),
-        expiration_date: params.require(:cced),
+        expiration_date: Date.parse(params.require :cced),
         # cco: params['cco']
     )
 

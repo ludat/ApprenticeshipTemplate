@@ -2,6 +2,8 @@ module CartControllerExceptionHandler
   def handle_exception
     begin
       yield
+    rescue ArgumentError => e
+      render json: {error: e.message}, status: :bad_request
     rescue CartSession::ExpiredException => e
       render json: {error: e.message}, status: :unprocessable_entity
     rescue ActionController::ParameterMissing, Cashier::EmptyCartException, ActiveRecord::RecordInvalid => e

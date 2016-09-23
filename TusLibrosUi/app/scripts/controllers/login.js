@@ -12,11 +12,18 @@ angular.module('tusLibrosUiApp')
         $scope.username = '1';
         $scope.password = 'password';
 
-        $scope.submit = function submit(username, password) {
+        $scope.createCart = function createCart(username, password) {
             return CartService.createCart(
                 username, password
             ).then(function (cartId) {
-                console.log(cartId);
+                $location.path('/carts/' + cartId);
+            });
+        };
+
+        $scope.createCart = function createCart(username, password) {
+            return CartService.createCart(
+                username, password
+            ).then(function (cartId) {
                 $location.path('/carts/' + cartId);
             });
         }

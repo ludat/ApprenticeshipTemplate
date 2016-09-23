@@ -1,3 +1,4 @@
 class CartSessionSerializer < ActiveModel::Serializer
-  attributes :id
+  attribute :id
+  has_many :cart_books, key: :content
 end

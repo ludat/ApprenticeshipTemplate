@@ -2,7 +2,7 @@ Rails.application.routes.draw do
 
   resources :carts, only: [:create, :show] do
     member do
-      post 'add_book'
+      post 'addBook' => :add_book
       post 'checkout'
       get 'books'
       get 'pucharses'
@@ -19,9 +19,8 @@ Rails.application.routes.draw do
 
   # get 'books' => 'books#index'
 
-  get 'login' => 'users#index', as: :login
-  post 'login' => 'users#login'
-  # root 'user#login'
+  # get 'login' => 'users#index', as: :login
+  # post 'login' => 'users#login'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

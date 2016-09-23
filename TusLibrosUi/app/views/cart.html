@@ -1,2 +1,35 @@
-<p>This is the cart view with the cart {{cartId|json}}.</p>
-<p><input type="button" ng-click="addBook('123456789')"/></p>
+<p>This is the cart view with the cart {{cart.id}}.</p>
+<h3>Current cart</h3>
+    <table class="table table-bordered">
+        <tr>
+            <th>Isbn</th>
+            <th>Title</th>
+            <th>Price</th>
+            <th>amount</th>
+        </tr>
+        <tr ng-repeat="order in cart.content">
+            <td>{{order.isbn}}</td>
+            <td>{{order.title}}</td>
+            <td>{{order.price}}</td>
+            <td>{{order.amount}}</td>
+        </tr>
+    </table>
+</div>
+<h3>things to add</h3>
+<table class="table table-bordered">
+    <tr>
+        <th>Isbn</th>
+        <th>Title</th>
+        <th>Price</th>
+        <th>CTA</th>
+    </tr>
+    <tr ng-repeat="book in books">
+        <td>{{book.isbn}}</td>
+        <td>{{book.title}}</td>
+        <td>{{book.price}}</td>
+        <td>
+            <button ng-click="addBook(book.isbn)">Add book</button>
+        </td>
+    </tr>
+</table>
+<p><button ng-click="checkout()">Checkout this beautiful cart</button></p>
