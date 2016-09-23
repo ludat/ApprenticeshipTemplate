@@ -8,10 +8,9 @@
  * Controller of the tusLibrosUiApp
  */
 angular.module('tusLibrosUiApp')
-    .controller('CartController', function ($scope, $location, $routeParams, BooksService, ) {
-        $scope.cartId = $routeParams.cartId;
-        $scope.books = [];
-        $scope.cartContent = [];
+    .controller('CartController', function ($scope, $location, BooksService, cart) {
+        $scope.cart = cart;
+        console.log(cart);
 
         $scope.updateBooks = function updateBooks() {
             return BooksService.getBooks()
@@ -23,15 +22,16 @@ angular.module('tusLibrosUiApp')
         $scope.updateCartContent = function updateCartContent() {
             return CartService.getContent($scope.cartId)
                 .then(function (cartContent) {
-                    $scope.cartContent = cartContent;
+                    $scope.cart.content = content;
                 })
                 .catch(function (error) {
+                    alert(error);
                     $location.path('/login');
                 });
         };
 
         $scope.checkout = function checkout() {
-            if ($scope.cartContent.length === 0) {
+            if ($scope.cart.content.length === 0) {
                 alert("You can't checkout an empty cart");
             } else {
                 $location.path('/carts/' + $scope.cartId + '/checkout');
@@ -39,9 +39,9 @@ angular.module('tusLibrosUiApp')
         };
 
         $scope.addBook = function addBook(isbn) {
-            CartService.addBook($scope.cartId, isbn);
+            $scope.cart.$addBook({isbn: isbn});
         };
 
         $scope.updateBooks();
-        $scope.updateCartContent();
+        // $scope.updateCartContent();
     });

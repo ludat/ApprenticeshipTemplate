@@ -8,9 +8,9 @@
             <th>amount</th>
         </tr>
         <tr ng-repeat="order in cart.content">
-            <td>{{order.isbn}}</td>
-            <td>{{order.title}}</td>
-            <td>{{order.price}}</td>
+            <td>{{order.book.isbn}}</td>
+            <td>{{order.book.title}}</td>
+            <td>{{order.book.price}}</td>
             <td>{{order.amount}}</td>
         </tr>
     </table>

@@ -25,19 +25,28 @@ angular
             })
             .when('/carts/:cartId', {
                 templateUrl: 'views/cart.html',
-                controller: 'CartController'
+                controller: 'CartController',
+                resolve: {
+                    cart: function (Cart, $route) {
+                        return Cart.get({id: $route.current.params.cartId});
+                    }
+                }
             })
             .when('/carts/:cartId/checkout', {
                 templateUrl: 'views/checkout.html',
                 controller: 'CartCheckoutController',
                 resolve: {
-                    cartId: function ($route) {
-                        //TODO I should create an object cart
-                        return $route.current.params.cartId;
+                    cart: function (Cart, $route) {
+                        return Cart.get({id: $route.current.params.cartId});
                     }
                 }
             })
             .otherwise({
                 redirectTo: '/login'
             });
+    })
+    .factory('Cart', function($resource) {
+        return $resource('http://localhost:3000/carts/:id/', {id: '@id'}, {
+            'addBook': {method: 'POST', params: {amount: 1}, url: 'http://localhost:3000/carts/:id/addBook/'}
+        });
     });

@@ -8,7 +8,7 @@
  * Controller of the tusLibrosUiApp
  */
 angular.module('tusLibrosUiApp')
-    .controller('CartCheckoutController', function cartCheckoutController($scope, $location, CartService, cartId) {
+    .controller('CartCheckoutController', function cartCheckoutController($scope, $location, cart) {
         $scope.cartId = cartId;
         $scope.number = '';
         $scope.expirationDate = '';
