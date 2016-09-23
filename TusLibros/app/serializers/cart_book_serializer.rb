@@ -1,3 +1,4 @@
 class CartBookSerializer < ActiveModel::Serializer
-  attributes :amount, :title, :isbn, :price
+  attributes :amount
+  has_one :book
 end

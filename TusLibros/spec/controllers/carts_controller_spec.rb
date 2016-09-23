@@ -54,9 +54,11 @@ RSpec.describe CartsController, type: :controller do
                                                      'content' => [
                                                          {
                                                              'amount' => 1,
-                                                             'isbn' => a_book.isbn,
-                                                             'title' => a_book.title,
-                                                             'price' => a_book.price
+                                                             'book' => {
+                                                                 'isbn' => a_book.isbn,
+                                                                 'title' => a_book.title,
+                                                                 'price' => a_book.price
+                                                             }
                                                          }
                                                      ]
                                                  }
@@ -127,10 +129,12 @@ RSpec.describe CartsController, type: :controller do
 
         expect(JSON.parse(response.body))
             .to eq([{
-                        "amount" => 1,
-                        "title" => "Harry Potter",
-                        "isbn" => "123456789",
-                        "price" => 10
+                        'amount' => 1,
+                        'book' => {
+                            'title' => 'Harry Potter',
+                            'isbn' => '123456789',
+                            'price' => 10
+                        }
                     }])
       end
     end
@@ -238,7 +242,7 @@ RSpec.describe CartsController, type: :controller do
     end
     context 'has an expired credit card' do
       let(:a_date) { 7.months.ago }
-      let(:expiration_date) { "#{a_date.year}/#{a_date.month}"}
+      let(:expiration_date) { "#{a_date.year}/#{a_date.month}" }
       before { subject }
 
       it 'the still exists' do
