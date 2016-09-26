@@ -26,8 +26,8 @@ angular.module('tusLibrosUiApp')
             }
         };
 
-        $scope.addBook = function addBook(book) {
-            $scope.cart.addBook({book: book, amount: 1});
+        $scope.addBook = function addBook(book, amount) {
+            $scope.cart.addBook({book: book, amount: amount});
         };
 
         $scope.updateBooks();
