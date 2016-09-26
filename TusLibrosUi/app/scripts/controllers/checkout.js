@@ -9,19 +9,16 @@
  */
 angular.module('tusLibrosUiApp')
     .controller('CartCheckoutController', function cartCheckoutController($scope, $location, cart) {
-        $scope.cartId = cartId;
         $scope.number = '';
         $scope.expirationDate = '';
         $scope.owner = '';
 
         $scope.checkout = function checkout(number, expirationDate) {
-            return CartService.checkout($scope.cartId, number, expirationDate)
-                .then(function (response) {
-                    console.log(response);
+            return cart.checkout({ccn: number, cced: expirationDate})
+                .then(function () {
                     $location.path('/login');
                 })
                 .catch(function (response) {
-                    console.log(response);
                     alert(response.data.error);
                 })
         }

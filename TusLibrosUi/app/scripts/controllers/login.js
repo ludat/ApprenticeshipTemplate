@@ -8,14 +8,14 @@
  * Controller of the tusLibrosUiApp
  */
 angular.module('tusLibrosUiApp')
-    .controller('LoginController', function LoginController($scope, $location, Cart) {
+    .controller('LoginController', function LoginController($scope, $location, CartService) {
         $scope.username = '1';
         $scope.password = 'password';
 
         $scope.createCart = function createCart(username, password) {
-            var cart = new Cart({clientId: $scope.username, password: $scope.password});
-            return cart.$save().then(function (cart) {
-                $location.path('/carts/' + cart.id)
-            });
+            new CartService.new({clientId: username, password: password})
+                .then(function (cart) {
+                    $location.path('/carts/' + cart.id)
+                });
         };
     });

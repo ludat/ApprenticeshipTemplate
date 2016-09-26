@@ -1,5 +1,39 @@
-<form ng-submit="checkout(number, expirationDate)">
-    <input ng-model="number" placeholder="Credit card number"/> <br/>
-    <input ng-model="expirationDate" placeholder="Expiration Date"/> <br/>
-    <input type="submit"/>
+<form name="form" novalidate>
+    <div class="form-group" ng-class="{'has-error': form.number.$touched && form.number.$invalid, 'has-success': form.number.$valid }">
+        <label for="credit-card-number" class="control-label">Credit card number:</label>
+        <input id="credit-card-number"
+               class="form-control"
+               ng-model="number"
+               name="number"
+               ng-pattern="/^\d{16}$/"
+               required=""/>
+        <div ng-show="form.$submitted || form.number.$touched">
+            <span ng-show="form.number.$error.required" class="help-block">Credit Card number can't be empty.</span>
+            <span ng-show="form.number.$error.pattern"
+                  class="help-block">Credit card number must consist of 16 numbers</span>
+        </div>
+    </div>
+
+    <div class="form-group" ng-class="{ 'has-error': form.expirationDate.$touched && form.expirationDate.$invalid,
+        'has-success': form.expirationDate.$valid
+    }">
+        <label for="credit-card-expiration-date" class="control-label"> Expiration date: </label>
+        <input id="credit-card-expiration-date"
+               ng-model="expirationDate"
+               class="form-control form-control-success"
+               name="expirationDate"
+               ng-pattern="/^\d{4}\/\d{2}$/"
+               required=""/>
+        <div ng-show="form.$submitted || form.expirationDate.$touched">
+            <span ng-show="form.expirationDate.$error.required"
+                  class="help-block">Expiration date can't be empty.</span>
+            <span ng-show="form.expirationDate.$error.pattern" class="help-block">The propper format is YYYY/MM</span>
+        </div>
+    </div>
+
+    <input type="button"
+           class="btn btn-primary"
+           value="checkout"
+           ng-disabled="form.$invalid"
+           ng-click="checkout(number, expirationDate)"/>
 </form>

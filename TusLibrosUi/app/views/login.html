@@ -1,8 +1,14 @@
-<p>This is the login view.</p>
 <form novalidate>
-    id: <input ng-model="username"/><br/>
-    password: <input type="password" ng-model="password"/><br/>
-    <button ng-click="createCart(username, password)">Add cart</button>
+    <label for="username-input">Username</label>
+    <input id="username-input" class="form-control" ng-model="username"/>
+    <br/>
+
+    <label for="password-input">Username</label>
+    <input id="password-input" class="form-control" type="password" ng-model="password"/>
+    <br/>
+
+
+    <button class="btn btn-primary" ng-click="createCart(username, password)">Add cart</button>
     <!-- TODO should be checked -->
-    <button ng-click="showPurcharses(username, password)">Show pucharses</button>
+    <button class="btn btn-primary" ng-click="showPurcharses(username, password)">Show pucharses</button>
 </form>

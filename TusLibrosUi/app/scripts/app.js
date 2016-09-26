@@ -27,8 +27,8 @@ angular
                 templateUrl: 'views/cart.html',
                 controller: 'CartController',
                 resolve: {
-                    cart: function (Cart, $route) {
-                        return Cart.get({id: $route.current.params.cartId});
+                    cart: function (CartService, $route) {
+                        return CartService.get($route.current.params.cartId);
                     }
                 }
             })
@@ -36,8 +36,8 @@ angular
                 templateUrl: 'views/checkout.html',
                 controller: 'CartCheckoutController',
                 resolve: {
-                    cart: function (Cart, $route) {
-                        return Cart.get({id: $route.current.params.cartId});
+                    cart: function (CartService, $route) {
+                        return CartService.get($route.current.params.cartId);
                     }
                 }
             })
@@ -45,8 +45,3 @@ angular
                 redirectTo: '/login'
             });
     })
-    .factory('Cart', function($resource) {
-        return $resource('http://localhost:3000/carts/:id/', {id: '@id'}, {
-            'addBook': {method: 'POST', params: {amount: 1}, url: 'http://localhost:3000/carts/:id/addBook/'}
-        });
-    });

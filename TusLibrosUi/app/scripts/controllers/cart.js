@@ -10,7 +10,6 @@
 angular.module('tusLibrosUiApp')
     .controller('CartController', function ($scope, $location, BooksService, cart) {
         $scope.cart = cart;
-        console.log(cart);
 
         $scope.updateBooks = function updateBooks() {
             return BooksService.getBooks()
@@ -19,29 +18,17 @@ angular.module('tusLibrosUiApp')
                 })
         };
 
-        $scope.updateCartContent = function updateCartContent() {
-            return CartService.getContent($scope.cartId)
-                .then(function (cartContent) {
-                    $scope.cart.content = content;
-                })
-                .catch(function (error) {
-                    alert(error);
-                    $location.path('/login');
-                });
-        };
-
         $scope.checkout = function checkout() {
             if ($scope.cart.content.length === 0) {
                 alert("You can't checkout an empty cart");
             } else {
-                $location.path('/carts/' + $scope.cartId + '/checkout');
+                $location.path('/carts/' + cart.id + '/checkout');
             }
         };
 
-        $scope.addBook = function addBook(isbn) {
-            $scope.cart.$addBook({isbn: isbn});
+        $scope.addBook = function addBook(book) {
+            $scope.cart.addBook({book: book, amount: 1});
         };
 
         $scope.updateBooks();
-        // $scope.updateCartContent();
     });

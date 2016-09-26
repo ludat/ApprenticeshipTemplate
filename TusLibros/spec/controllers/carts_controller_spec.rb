@@ -71,35 +71,35 @@ RSpec.describe CartsController, type: :controller do
     let(:a_cart) { create :cart_session }
     let(:a_book) { create :harry_potter }
     it 'can hold an item' do
-      post :add_book, {id: a_cart.id, isbn: a_book.isbn, amount: 1}
+      post :add_book, {id: a_cart.id, book: a_book.as_json, amount: 1}
 
       expect(response).to have_http_status(:success)
       expect(a_cart).not_to be_empty
     end
 
     it 'can not add zero books to a cart' do
-      post :add_book, {id: a_cart.id, isbn: a_book.isbn, amount: 0}
+      post :add_book, {id: a_cart.id, book: a_book.as_json, amount: 0}
 
       expect(response).to have_http_status(:bad_request)
       expect(JSON.parse(response.body)).to eq({'error' => 'Validation failed: Amount must be greater than 0'})
     end
 
     it 'can not add a negative number of books' do
-      post :add_book, {id: a_cart.id, isbn: a_book.isbn, amount: -20}
+      post :add_book, {id: a_cart.id, book: a_book.as_json, amount: -20}
 
       expect(response).to have_http_status(:bad_request)
       expect(JSON.parse(response.body)).to eq({'error' => 'Validation failed: Amount must be greater than 0'})
     end
 
     it 'can not add a j number of books' do
-      post :add_book, {id: a_cart.id, isbn: a_book.isbn, amount: 'j'}
+      post :add_book, {id: a_cart.id, book: a_book.as_json, amount: 'j'}
 
       expect(response).to have_http_status(:bad_request)
       expect(JSON.parse(response.body)).to eq({'error' => 'Validation failed: Amount must be greater than 0'})
     end
 
     it 'can not add a book that does not exist' do
-      post :add_book, {id: a_cart.id, isbn: a_book.isbn + 'j', amount: 1}
+      post :add_book, {id: a_cart.id, book: { isbn: a_book.isbn + 'j'}, amount: 1}
 
       expect(response).to have_http_status(:not_found)
       expect(JSON.parse(response.body)).to eq({'error' => "Couldn't find Book"})

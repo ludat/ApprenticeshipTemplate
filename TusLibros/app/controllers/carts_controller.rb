@@ -20,7 +20,7 @@ class CartsController < ApplicationController
 
   def add_book
     cart = CartSession.find(params.require(:id))
-    book = Book.find_by_isbn!(params.require(:isbn))
+    book = Book.find_by_isbn!(params.require(:book).require(:isbn))
 
     cart.add(book, params.require(:amount).to_i)
 

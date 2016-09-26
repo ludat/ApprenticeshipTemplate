@@ -1,23 +1,23 @@
 'use strict';
 
-describe('Controller: LoginCtrl', function () {
+describe('Controller: LoginController', function () {
 
   // load the controller's module
   beforeEach(module('tusLibrosUiApp'));
 
-  var LoginCtrl,
+  var LoginController,
     scope;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
-    LoginCtrl = $controller('LoginCtrl', {
+    LoginController = $controller('LoginController', {
       $scope: scope
       // place here mocked dependencies
     });
   }));
 
   it('should attach a list of awesomeThings to the scope', function () {
-    expect(LoginCtrl.awesomeThings.length).toBe(3);
+    expect(LoginController.awesomeThings.length).toBe(3);
   });
 });
