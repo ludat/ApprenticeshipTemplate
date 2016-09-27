@@ -20,6 +20,6 @@ angular.module('tusLibrosUiApp')
                 })
                 .catch(function (response) {
                     alert(response.data.error);
-                })
-        }
+                });
+        };
     });

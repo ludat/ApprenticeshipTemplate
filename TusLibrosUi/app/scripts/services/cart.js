@@ -8,20 +8,21 @@
  * Service in the tusLibrosUiApp.
  */
 angular.module('tusLibrosUiApp')
-    .factory('Cart', function ($http) {
+    .factory('Cart', function (CARTS_URL, $http) {
         return function (attrs) {
             var self = this;
             angular.merge(self, attrs);
 
             self.remoteAddBook = function remoteAddBook(book) {
-                return $http.post('http://localhost:3000/carts/' + self.id + '/addBook', book)
+                return $http.post(CARTS_URL + self.id + '/addBook', book);
             };
 
             self.updateContent = function updateContent() {
-                return $http.get('http://localhost:3000/carts/' + self.id + '/books')
+                return $http.get(CARTS_URL + self.id + '/books')
                     .then(function (response) {
                         self.content = response.data;
                     })
+                ;
             };
 
             self.localAddBook = function localAddBook(aBook) {
@@ -30,17 +31,16 @@ angular.module('tusLibrosUiApp')
                 });
 
                 if (orders.length === 0) {
-                    self.content.push(aBook)
+                    self.content.push(aBook);
                 } else {
                     orders[0].amount += aBook.amount;
                 }
-
             };
 
             self.addBook = function addBook(book) {
                 // self.remoteAddBook.then(self.updateContent);
                 self.remoteAddBook(book).then(function () {
-                    self.localAddBook(book)
+                    self.localAddBook(book);
                 });
             };
 
@@ -49,22 +49,21 @@ angular.module('tusLibrosUiApp')
             };
 
             self.checkout = function checkout(creditCard) {
-                return $http.post('http://localhost:3000/carts/' + self.id + '/checkout', creditCard)
-            }
+                return $http.post(CARTS_URL + self.id + '/checkout', creditCard);
+            };
         };
     })
-    .service('CartService', function CartService($http, Cart) {
+    .service('CartService', function CartService(CARTS_URL, $http, Cart) {
         this.new = function createCart(credentials) {
-            return $http.post('http://localhost:3000/carts', credentials)
+            return $http.post(CARTS_URL, credentials)
                 .then(function makeACart(response) {
                     return new Cart(response.data);
-                })
+                });
         };
-
         this.get = function getCart(id) {
-            return $http.get('http://localhost:3000/carts/' + id)
+            return $http.get(CARTS_URL + id)
                 .then(function makeACart(response) {
                     return new Cart(response.data);
-                })
+                });
         };
     });

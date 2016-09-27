@@ -15,7 +15,7 @@ angular.module('tusLibrosUiApp')
         $scope.createCart = function createCart(username, password) {
             new CartService.new({clientId: username, password: password})
                 .then(function (cart) {
-                    $location.path('/carts/' + cart.id)
+                    $location.path('/carts/' + cart.id);
                 });
         };
     });

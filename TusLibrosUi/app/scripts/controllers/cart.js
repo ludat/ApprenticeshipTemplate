@@ -15,9 +15,8 @@ angular.module('tusLibrosUiApp')
             return BooksService.getBooks()
                 .then(function (books) {
                     $scope.books = books;
-                })
+                });
         };
-
         $scope.checkout = function checkout() {
             if ($scope.cart.content.length === 0) {
                 alert("You can't checkout an empty cart");
@@ -25,7 +24,6 @@ angular.module('tusLibrosUiApp')
                 $location.path('/carts/' + cart.id + '/checkout');
             }
         };
-
         $scope.addBook = function addBook(book, amount) {
             $scope.cart.addBook({book: book, amount: amount});
         };

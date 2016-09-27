@@ -8,6 +8,7 @@
  *
  * Main module of the application.
  */
+
 angular
     .module('tusLibrosUiApp', [
         'ngAnimate',
@@ -45,3 +46,7 @@ angular
                 redirectTo: '/login'
             });
     })
+    .constant('_', window._ )
+    .constant('CARTS_URL', 'http://localhost:3000/carts/')
+    .constant('BOOKS_URL', 'http://localhost:3000/books/')
+;
