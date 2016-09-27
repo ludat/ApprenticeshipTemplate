@@ -13,6 +13,10 @@ angular.module('tusLibrosUiApp')
             return $http.get('http://localhost:3000/books')
                 .then(function (response) {
                     return response.data;
-                });
+                })
+                .catch(function (response) {
+                    return Promise.reject(response.data.error);
+                })
+            ;
         };
     });
