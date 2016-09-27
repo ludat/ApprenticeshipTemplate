@@ -16,6 +16,10 @@ angular.module('tusLibrosUiApp')
             new CartService.new({clientId: username, password: password})
                 .then(function (cart) {
                     $location.path('/carts/' + cart.id);
-                });
+                })
+                .catch(function (error) {
+                    alert(error);
+                })
+            ;
         };
     });

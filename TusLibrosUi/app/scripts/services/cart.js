@@ -14,13 +14,20 @@ angular.module('tusLibrosUiApp')
             angular.merge(self, attrs);
 
             self.remoteAddBook = function remoteAddBook(book) {
-                return $http.post(CARTS_URL + self.id + '/addBook', book);
+                return $http
+                    .post(CARTS_URL + self.id + '/addBook', book)
+                    .catch(function (response) {
+                        return Promise.reject(response.data.error);
+                    })
+                ;
             };
 
             self.updateContent = function updateContent() {
                 return $http.get(CARTS_URL + self.id + '/books')
                     .then(function (response) {
                         self.content = response.data;
+                    }).catch(function (response) {
+                        return Promise.reject(response.data.error);
                     })
                 ;
             };
@@ -39,7 +46,9 @@ angular.module('tusLibrosUiApp')
 
             self.addBook = function addBook(book) {
                 // self.remoteAddBook.then(self.updateContent);
-                self.remoteAddBook(book).then(function () {
+                self
+                    .remoteAddBook(book)
+                    .then(function () {
                     self.localAddBook(book);
                 });
             };
@@ -49,7 +58,16 @@ angular.module('tusLibrosUiApp')
             };
 
             self.checkout = function checkout(creditCard) {
-                return $http.post(CARTS_URL + self.id + '/checkout', creditCard);
+                if (self.empty()) {
+                    return Promise.reject({error: 'The cart can\'t be empty'});
+                } else {
+                    return $http
+                        .post(CARTS_URL + self.id + '/checkout', creditCard)
+                        .catch(function (response) {
+                            return Promise.reject(response.data.error);
+                        })
+                    ;
+                }
             };
         };
     })
@@ -58,12 +76,19 @@ angular.module('tusLibrosUiApp')
             return $http.post(CARTS_URL, credentials)
                 .then(function makeACart(response) {
                     return new Cart(response.data);
+                })
+                .catch(function (response) {
+                    return Promise.reject(response.data.error);
                 });
         };
         this.get = function getCart(id) {
             return $http.get(CARTS_URL + id)
                 .then(function makeACart(response) {
                     return new Cart(response.data);
-                });
+                })
+                .catch(function (response) {
+                    return Promise.reject(response.data.error);
+                })
+            ;
         };
     });
