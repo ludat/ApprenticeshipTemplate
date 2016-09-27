@@ -18,7 +18,7 @@ angular.module('tusLibrosUiApp')
                 });
         };
         $scope.checkout = function checkout() {
-            if ($scope.cart.content.length === 0) {
+            if ($scope.cart.empty()) {
                 alert("You can't checkout an empty cart");
             } else {
                 $location.path('/carts/' + cart.id + '/checkout');
