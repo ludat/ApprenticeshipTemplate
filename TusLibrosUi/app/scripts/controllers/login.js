@@ -8,7 +8,7 @@
  * Controller of the tusLibrosUiApp
  */
 angular.module('tusLibrosUiApp')
-    .controller('LoginController', function LoginController($scope, $location, CartService) {
+    .controller('LoginController', function LoginController($scope, $location, ngToast, CartService) {
         $scope.username = '1';
         $scope.password = 'password';
 
@@ -18,7 +18,7 @@ angular.module('tusLibrosUiApp')
                     $location.path('/carts/' + cart.id);
                 })
                 .catch(function (error) {
-                    alert(error);
+                    ngToast.danger(error);
                 })
             ;
         };

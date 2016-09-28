@@ -8,12 +8,11 @@
  * Controller of the tusLibrosUiApp
  */
 angular.module('tusLibrosUiApp')
-    .controller('CartCheckoutController', function cartCheckoutController($scope, $location, _, cart) {
+    .controller('CartCheckoutController', function ($scope, $location, _, ngToast, cart) {
         $scope.number = '';
         var currentYear = new Date().getFullYear();
         $scope.years = _.range(currentYear, currentYear + 10);
         $scope.months = _.range(1, 12 + 1);
-        // $scope.expirationDate = {month: null, year: null};
 
         $scope.checkout = function checkout(number, expirationDate) {
             return cart.checkout({
@@ -21,10 +20,12 @@ angular.module('tusLibrosUiApp')
                 cced: expirationDate.year + '/' + expirationDate.month
             })
                 .then(function () {
+                    ngToast.create('Cart purchased successfully');
                     $location.path('/login');
                 })
                 .catch(function (error) {
-                    alert(error);
-                });
+                    ngToast.danger(error);
+                })
+            ;
         };
     });

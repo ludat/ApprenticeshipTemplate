@@ -16,7 +16,8 @@ angular
         'ngResource',
         'ngRoute',
         'ngSanitize',
-        'ngTouch'
+        'ngTouch',
+        'ngToast'
     ])
     .config(function ($routeProvider) {
         $routeProvider
@@ -44,9 +45,16 @@ angular
             })
             .otherwise({
                 redirectTo: '/login'
-            });
+            })
+        ;
     })
-    .constant('_', window._ )
+    .constant('_', window._)
     .constant('CARTS_URL', 'http://localhost:3000/carts/')
     .constant('BOOKS_URL', 'http://localhost:3000/books/')
+    .config(function (ngToastProvider) {
+        ngToastProvider.configure({
+            verticalPosition: 'top',
+            horizontalPosition: 'left'
+        });
+    })
 ;

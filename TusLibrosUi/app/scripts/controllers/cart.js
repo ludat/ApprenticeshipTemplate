@@ -8,7 +8,7 @@
  * Controller of the tusLibrosUiApp
  */
 angular.module('tusLibrosUiApp')
-    .controller('CartController', function ($scope, $location, BooksService, cart) {
+    .controller('CartController', function ($scope, $location, ngToast, BooksService, cart) {
         $scope.cart = cart;
 
         $scope.updateBooks = function updateBooks() {
@@ -19,7 +19,7 @@ angular.module('tusLibrosUiApp')
         };
         $scope.checkout = function checkout() {
             if ($scope.cart.empty()) {
-                alert("You can't checkout an empty cart");
+                ngToast.danger("You can't checkout an empty cart");
             } else {
                 $location.path('/carts/' + cart.id + '/checkout');
             }
