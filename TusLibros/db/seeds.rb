@@ -8,10 +8,12 @@
 
 a_user = User.create!(username: 'lucas', password: 'password')
 #
-a_book = Book.create!(isbn: '123456789', title: 'The alchemist', price: 10)
-another_book = Book.create!(isbn: '987654321', title: 'LOTR', price: 25)
-#
-# cart = Cart.create!(user: a_user)
-#
-# cart.add a_book, 3
-# cart.add another_book, 1
+Book.create! isbn: '1000000000', title: 'Don Quixote', price: 10
+Book.create! isbn: '2000000000', title: 'Tale of Two Cities', price: 15
+Book.create! isbn: '3000000000', title: 'The Alchemist', price: 52
+Book.create! isbn: '4000000000', title: 'The Little Prince', price: 38
+Book.create! isbn: '5000000000', title: 'Harry Potter and the Philosopher\'s Stone', price: 57
+Book.create! isbn: '6000000000', title: 'The Hobbit', price: 102
+Book.create! isbn: '7000000000', title: 'And Then There Were None', price: 12
+Book.create! isbn: '8000000000', title: 'Dream of the Red Chamber', price: 74
+Book.create! isbn: '9000000000', title: 'Alice in Wonderland', price: 19
