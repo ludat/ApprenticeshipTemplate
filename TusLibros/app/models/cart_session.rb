@@ -13,8 +13,7 @@ class CartSession < ActiveRecord::Base
   end
 
   def active?
-    # Time.now - last_operated_at < 30.minutes
-    true
+    Time.now - last_operated_at < 30.minutes
   end
 
   def add(a_book, amount)
