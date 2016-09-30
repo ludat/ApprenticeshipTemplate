@@ -1,0 +1,8 @@
+<table class="table table-bordered">
+  <tr>
+    <th ng-repeat="header in headers">{{header}}</th>
+  </tr>
+  <tr ng-repeat="item in content">
+    <td ng-repeat="accessor in accessors">{{ item | get:accessor }}</td>
+  </tr>
+</table>
