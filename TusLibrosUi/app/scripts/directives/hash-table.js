@@ -16,7 +16,6 @@ angular.module('tusLibrosUiApp')
                 content: '=content'
             },
             link: function (scope, element, attrs, controller, transcludeFn) {
-                console.log(score.mappings);
                 scope.headers = _.keys(scope.mappings);
                 scope.accessors = _.values(scope.mappings);
             }
