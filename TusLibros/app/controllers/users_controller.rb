@@ -10,8 +10,8 @@ class UsersController < ApplicationController
   def index
   end
 
-  def pucharses
+  def purchases
     user = User.login(id: params.require(:id), password: params.require(:password))
-    render json: user.pucharses
+    render json: user.purchases
   end
 end

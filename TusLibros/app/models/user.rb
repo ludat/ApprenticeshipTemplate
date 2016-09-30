@@ -20,7 +20,7 @@ class User < ActiveRecord::Base
     credit_cards.any?
   end
 
-  def pucharses
+  def purchases
     Sale.where(user: self)
   end
 end

@@ -1,3 +1,4 @@
 class SaleSerializer < ActiveModel::Serializer
-  attributes :amount, :isbn
+  attributes :amount
+  has_one :book
 end

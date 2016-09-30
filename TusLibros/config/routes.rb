@@ -5,13 +5,12 @@ Rails.application.routes.draw do
       post 'addBook' => :add_book
       post 'checkout'
       get 'books'
-      get 'pucharses'
     end
   end
 
   resources :users, only: [] do
     member do
-      get 'pucharses'
+      get 'purchases'
     end
   end
 

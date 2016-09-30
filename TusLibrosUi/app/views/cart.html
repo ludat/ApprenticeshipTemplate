@@ -16,19 +16,12 @@
     </tr>
 </table>
 <h3>Current cart</h3>
-    <table class="table table-bordered">
-        <tr>
-            <th>Isbn</th>
-            <th>Title</th>
-            <th>Price</th>
-            <th>amount</th>
-        </tr>
-        <tr ng-repeat="order in cart.content">
-            <td>{{order.book.isbn}}</td>
-            <td>{{order.book.title}}</td>
-            <td>{{order.book.price}}</td>
-            <td>{{order.amount}}</td>
-        </tr>
-    </table>
-</div>
+<hash-table content="cart.content"
+            mappings="{
+                      Isbn: 'book.isbn',
+                      Title: 'book.title',
+                      Price: 'book.price',
+                      amount: 'amount'
+                      }">
+</hash-table>
 <p><button ng-click="checkout()">Checkout this beautiful cart</button></p>
