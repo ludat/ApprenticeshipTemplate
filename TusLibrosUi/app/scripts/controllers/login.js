@@ -1,14 +1,7 @@
 'use strict';
 
-/**
- * @ngdoc function
- * @name tusLibrosUiApp.controller:LoginCtrl
- * @description
- * # LoginCtrl
- * Controller of the tusLibrosUiApp
- */
 angular.module('tusLibrosUiApp')
-    .controller('LoginController', function LoginController($scope, $location, ngToast, CartService) {
+    .controller('LoginController', function LoginController($scope, $location, ngToast, UserService, CartService) {
         $scope.username = '1';
         $scope.password = 'password';
 
@@ -21,5 +14,10 @@ angular.module('tusLibrosUiApp')
                     ngToast.danger(error);
                 })
             ;
+        };
+
+        $scope.showPurchases = function (username, password) {
+            UserService.login(username, password);
+            $location.path('/purchases');
         };
     });

@@ -43,11 +43,31 @@ angular
                     }
                 }
             })
+            .when('/purchases', {
+                templateUrl: 'views/purchases.html',
+                controller: 'PurchasesController',
+                resolve: {
+                    purchases: function (UserService, $http) {
+                        return UserService.currentUser()
+                            .then(function (user) {
+                                return $http.get(
+                                    'http://localhost:3000/users/' + user.username + '/purchases',
+                                    {params: {password: user.password}}
+                                );
+                            })
+                            .then(function (response) {
+                                return response.data;
+                            })
+                        ;
+                    }
+                }
+            })
             .otherwise({
                 redirectTo: '/login'
             })
         ;
     })
+
     .constant('_', window._)
     .constant('CARTS_URL', 'http://localhost:3000/carts/')
     .constant('BOOKS_URL', 'http://localhost:3000/books/')
