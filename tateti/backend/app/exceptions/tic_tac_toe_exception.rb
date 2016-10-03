@@ -1,0 +1,2 @@
+class TicTacToeException < Exception
+end
