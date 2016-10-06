@@ -11,9 +11,46 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161003192339) do
+ActiveRecord::Schema.define(version: 20161006214430) do
+
+  create_table "boards", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "game_id"
+  end
+
+  add_index "boards", ["game_id"], name: "index_boards_on_game_id"
 
   create_table "games", force: :cascade do |t|
+    t.integer  "users_id"
+    t.integer  "board_id"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "games", ["board_id"], name: "index_games_on_board_id"
+  add_index "games", ["user_id"], name: "index_games_on_user_id"
+  add_index "games", ["users_id"], name: "index_games_on_users_id"
+
+  create_table "games_users", id: false, force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "game_id", null: false
+  end
+
+  create_table "moves", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "x"
+    t.integer  "y"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "board_id"
+  end
+
+  add_index "moves", ["user_id"], name: "index_moves_on_user_id"
+
+  create_table "users", force: :cascade do |t|
+    t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

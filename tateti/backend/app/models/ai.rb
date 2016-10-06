@@ -1,7 +1,7 @@
 class AI
   def get_next_move(the_game)
     myself = the_game.current_player
-    opponent = the_game.non_current_player
+    opponent = the_game.other_player
     moveValueHash = Hash.new(0)
 
     # All valid moves

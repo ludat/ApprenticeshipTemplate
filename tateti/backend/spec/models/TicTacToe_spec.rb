@@ -1,8 +1,12 @@
 require 'rails_helper'
 
 describe Game do
-  let(:game) { Game.new }
+  let(:user1) { User.create!(name: 'lucas')}
+  let(:user2) { User.create!(name: 'roberto')}
+  let(:board) { Board.create! }
+  let(:game) { Game.create!(users: [user1, user2], board: board, user: user1) }
   it "the board should be empty at the start of the game" do
+    puts board
     expect(game).to be_empty
   end
 
@@ -13,7 +17,7 @@ describe Game do
       expect(game).not_to be_empty
     end
     it "mark a position" do
-      expect(game.get(Position.down)).to eql 'X'
+      expect(game.get(Position.down)).to eql user1
     end
 
     it "shouldn't be able to mark a marked position" do
@@ -31,18 +35,18 @@ describe Game do
     end
 
     it "should not end if less than three moves by each player were made" do
-      expect(game.ended?).to eql false
+      expect(game).not_to be_ended
     end
 
     it "should NOT be able to tell who won " do
-      expect(game.winner).to eql nil
+      expect(game.winner).to be_nil
     end
 
     context "After 'X' player has won" do
       before { game.mark(Position.upRight) }
 
       it "The game should end" do
-        expect(game.ended?).to eql true
+        expect(game).to be_ended
       end
 
       it "should not be able to mark anything" do
@@ -50,7 +54,7 @@ describe Game do
       end
 
       it "should be able to tell who won " do
-        expect(game.winner).to eql 'X'
+        expect(game.winner).to be user1
       end
     end
   end

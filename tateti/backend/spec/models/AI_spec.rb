@@ -1,7 +1,8 @@
-require 'rails_helper'
-
-describe AI do
-  let(:game) { Game.new }
+describe'AI' do
+  let(:user1) { User.create!(name: 'lucas')}
+  let(:user2) { User.create!(name: 'roberto')}
+  let(:board) { Board.create! }
+  let(:game) { Game.create!(users: [user1, user2], board: board, user: user1) }
   let(:ai) { AI.new }
   it 'makes the only valid move' do
     game.mark(Position.down)
@@ -34,7 +35,7 @@ describe AI do
     game.mark(Position.downRight)
     expect(ai.get_next_move(game)).to eq Position.down
   end
-  skip "survives having to force the other player" do
+  it "survives having to force the other player" do
     game.mark(Position.downRight)
     game.mark(Position.center)
     game.mark(Position.upLeft)
@@ -44,7 +45,7 @@ describe AI do
     game.mark(Position.upLeft)
     expect(ai.get_next_move(game)).to eq Position.center
   end
-  skip "survives having to block ahead of time" do
+  it "survives having to block ahead of time" do
     game.mark(Position.center)
     game.mark(Position.downLeft)
     game.mark(Position.upRight)

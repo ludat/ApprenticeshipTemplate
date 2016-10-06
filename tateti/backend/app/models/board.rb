@@ -1,37 +1,26 @@
-class Board
+class Board < ActiveRecord::Base
+  has_many :moves
+  belongs_to :game
 
-  def initialize(board = nil)
-    @board = board || [
-      [' ', ' ', ' '],
-      [' ', ' ', ' '],
-      [' ', ' ', ' '],
-    ]
+  def get(position)
+    move = moves.find_by(x: position.x, y: position.y)
+
+    if move.nil?
+      ' '
+    else
+      move.user
+    end
   end
 
-  def get(pos)
-    @board[pos.x][pos.y]
+  def occupied?(position)
+    moves.exists?(x: position.x, y: position.y)
   end
 
-  def empty?(pos)
-    @board[pos.x][pos.y] == ' '
+  def empty?(position)
+    not occupied?(position)
   end
 
-  def set(pos, mark)
-    @board[pos.x][pos.y] = mark
+  def set(pos, user)
+    moves.create!(x: pos.x, y: pos.y, user: user)
   end
-
-  def to_s
-%{
- #{get(Position.upLeft)} | #{get(Position.up)} | #{get(Position.upRight)}
------------
- #{get(Position.left)} | #{get(Position.center)} | #{get(Position.right)}
------------
- #{get(Position.downLeft)} | #{get(Position.down)} | #{get(Position.downRight)}
-}
-  end
-
-  def clone
-    Board.new(@board.map { |row| row.dup })
-  end
-
 end

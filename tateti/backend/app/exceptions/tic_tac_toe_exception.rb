@@ -1,2 +1,2 @@
-class TicTacToeException < Exception
+class TicTacToeException < ArgumentError
 end
