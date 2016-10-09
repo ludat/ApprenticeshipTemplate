@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
+
+  resources :user_token, only: [:create]
+
+  resources :games do
+    resources :moves
+  end
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
