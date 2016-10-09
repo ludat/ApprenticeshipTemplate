@@ -3,8 +3,8 @@ class Game < ActiveRecord::Base
   belongs_to :user
   has_one :board
 
-  def self.for(player1, player2)
-    Game.create!()
+  def self.for(*users)
+    Game.create!(users: users, board: Board.create!)
   end
 
   def mark(position)
