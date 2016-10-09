@@ -6,7 +6,7 @@ class UserTokenController < ApplicationController
     user = User.login(params.require(:username), params.require(:password))
     render json: {
         token: JWT.encode(
-            {user: user.as_json(only: [:id, :username])}, nil, 'none')}, status: :created
+            {user: UserSerializer.new(user).as_json}, nil, 'none')}, status: :created
   end
 
   private

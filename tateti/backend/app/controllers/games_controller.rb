@@ -1,6 +1,5 @@
 class GamesController < ApplicationController
   def create
-    byebug
     user_id = JWT.decode(
         request.headers['Authorization'].split(' ').last, nil, false).first['user']['id']
     user = User.find(user_id)
