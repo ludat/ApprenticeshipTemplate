@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe UserTokenController, type: :controller do
-  context 'with a valid user and a valid password' do
+  context 'with valid credentials' do
     let(:user) { create(:lucas) }
 
     before do
-      post :create, { id: user.username }
+      post :create, { username: user.username, password: user.password}
     end
 
     it 'I get a jwt with that user id' do
@@ -15,9 +15,9 @@ RSpec.describe UserTokenController, type: :controller do
       expect(content).to eq({'user' => {'id' => user.id, 'username' => user.username}})
     end
   end
-  context 'with an invalid user and a valid password' do
+  context 'with a invalid credentials' do
     before do
-      post :create, { id: 153 }
+      post :create, { username: 'j', password: 'j'}
     end
 
     it 'I get a jwt with that user id' do

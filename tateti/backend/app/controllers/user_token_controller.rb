@@ -1,6 +1,6 @@
 class UserTokenController < ApplicationController
   def create
-    user = User.find_by(params.permit :username)
+    user = User.find_by(username: params.require(:username), password: params.require(:password))
     if user.nil?
       render json: {error: 'Invalid credentials'}, status: :unauthorized
     else
