@@ -1,8 +1,7 @@
 describe'AI' do
-  let(:user1) { User.create!(name: 'lucas')}
-  let(:user2) { User.create!(name: 'roberto')}
-  let(:board) { Board.create! }
-  let(:game) { Game.create!(users: [user1, user2], board: board, user: user1) }
+  let(:user1) { create :lucas}
+  let(:user2) { create :roberto }
+  let(:game) { create :game, users: [user1, user2], user: user1 }
   let(:ai) { AI.new }
   it 'makes the only valid move' do
     game.mark(Position.down)

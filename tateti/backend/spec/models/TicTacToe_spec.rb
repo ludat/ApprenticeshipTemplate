@@ -1,12 +1,10 @@
 require 'rails_helper'
 
 describe Game do
-  let(:user1) { User.create!(name: 'lucas')}
-  let(:user2) { User.create!(name: 'roberto')}
-  let(:board) { Board.create! }
-  let(:game) { Game.create!(users: [user1, user2], board: board, user: user1) }
+  let(:user1) { create :lucas}
+  let(:user2) { create :roberto }
+  let(:game) { create :game, users: [user1, user2], user: user1 }
   it "the board should be empty at the start of the game" do
-    puts board
     expect(game).to be_empty
   end
 
