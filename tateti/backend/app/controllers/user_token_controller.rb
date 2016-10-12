@@ -1,20 +1,10 @@
 class UserTokenController < ApplicationController
 
-  around_action :exception_catcher
+  include ExceptionHandler
 
   def create
     user = User.login(params.require(:username), params.require(:password))
-    render json: {
-        token: JWT.encode(
-            {user: UserSerializer.new(user).as_json}, nil, 'none')}, status: :created
+    render json: {token: JwtService.encode({user: UserSerializer.new(user).as_json})}, status: :created
   end
 
-  private
-  def exception_catcher
-    begin
-      yield
-    rescue UnauthorizedException => e
-      render json: {error: e.message}, status: :unauthorized
-    end
-  end
 end

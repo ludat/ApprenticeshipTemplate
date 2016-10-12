@@ -1,20 +1,29 @@
 class GamesController < ApplicationController
+
+  include ExceptionHandler
+
   def create
-    user_id = JWT.decode(
-        request.headers['Authorization'].split(' ').last, nil, false).first['user']['id']
+    user_id = token['user']['id']
+
     user = User.find(user_id)
-    # render json: Game.for(User.find(user_id)session[:login])
-    render json: Game.for(user)
+
+    render json: Game.for(user), status: :created
   end
 
   def show
     render json: Game.find(params[:id])
   end
-# GET 	/photos 	photos#index 	display a list of all photos
-# GET 	/photos/new 	photos#new 	return an HTML form for creating a new photo
-# POST 	/photos 	photos#create 	create a new photo
-# GET 	/photos/:id 	photos#show 	display a specific photo
-# GET 	/photos/:id/edit 	photos#edit 	return an HTML form for editing a photo
-# PATCH/PUT 	/photos/:id 	photos#update 	update a specific photo
-# DELETE 	/photos/:id 	photos#destroy 	delete a specific photo
+
+  def encode(json)
+    JWT.encode(json, nil, 'none')
+  end
+
+  def decode(token)
+    JWT.decode(token, nil, false).first
+  end
+
+  def token
+    return decode request.headers['Authorization'].split(' ').last if request.headers['Authorization'].present?
+    raise UnauthorizedException, 'You are not authorized'
+  end
 end

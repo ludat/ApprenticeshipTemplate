@@ -1,16 +1,24 @@
 require 'rails_helper'
 
 RSpec.describe GamesController, type: :controller do
-  let(:user2) { create :roberto }
 
   context 'with a valid user' do
     let(:user1) { create :lucas }
 
+    before do
+      authenticate! user1
+    end
+
     it 'can create a new game' do
       post :create
       expect(response).to have_http_status(:created)
-      expect(JSON.parse(response.body)).to eq({'id' => 1})
     end
   end
-
+  context 'without a valid user' do
+    it 'can not create a board' do
+      post :create
+      expect(response).to have_http_status(:unauthorized)
+      expect(Game.count).to be 0
+    end
+  end
 end
