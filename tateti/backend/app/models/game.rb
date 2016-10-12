@@ -3,16 +3,19 @@ class Game < ActiveRecord::Base
   belongs_to :user
   has_one :board
 
+  alias_attribute :current_player, :user
+  alias_attribute :players, :users
+
   def self.for(*users)
-    Game.create!(users: users, board: Board.create!)
+    Game.create!(players: users, board: Board.create!)
   end
 
   def mark(position)
     validate_mark(position)
 
-    board.set(position, user)
+    board.set(position, current_player)
 
-    self.user = other_player
+    self.current_player = other_player
     save!
   end
 
@@ -20,12 +23,13 @@ class Game < ActiveRecord::Base
     raise TicTacToeException, "That's not a valid position" if board.occupied?(pos)
     raise TicTacToeException, 'The game has already ended' if self.ended?
   end
+
   def get(position)
     board.get(position)
   end
 
   def winner
-    users.find { |player| self.has_won?(player) }
+    players.find { |player| self.has_won?(player) }
   end
 
   def ended?
@@ -39,15 +43,7 @@ class Game < ActiveRecord::Base
   end
 
   def any_player_won
-    users.any?{ |u| self.has_won?(u) }
-  end
-
-  def current_player
-    user
-  end
-
-  def other_player
-    users.all.find { |u| u != user}
+    players.any? { |u| self.has_won?(u) }
   end
 
   def has_won?(player)
@@ -59,9 +55,31 @@ class Game < ActiveRecord::Base
     }
   end
 
-  def empty?()
-    Position.all.all? {|pos|
+  def join(player)
+    raise TicTacToeException, 'This board is already full' if players.count == 2
+    raise TicTacToeException, 'You can not play with yourself' if players.exists? player.id
+
+    players.push(player)
+
+    if players.count == 2
+      self.user = player
+    end
+
+    save!
+  end
+
+  def state
+    'waiting'
+  end
+
+  def empty?
+    Position.all.all? { |pos|
       board.empty?(pos)
     }
   end
+
+  def other_player
+    players.all.find { |player| player != current_player }
+  end
+
 end

@@ -1,7 +1,6 @@
 class CreateGames < ActiveRecord::Migration
   def change
     create_table :games do |t|
-      t.references :users, index: true, foreign_key: true
       t.references :board, index: true, foreign_key: true
       t.references :user, index: true, foreign_key: true
 

@@ -3,15 +3,98 @@ require 'rails_helper'
 RSpec.describe GamesController, type: :controller do
 
   context 'with a valid user' do
-    let(:user1) { create :lucas }
+    let(:user) { create :lucas }
 
     before do
-      authenticate! user1
+      authenticate! user
     end
 
     it 'can create a new game' do
       post :create
       expect(response).to have_http_status(:created)
+      expect(Game.count).to be 1
+      game = Game.first
+      expect(json)
+          .to eq({
+                     'id' => game.id,
+                     'state' => 'waiting',
+                     'board' => {
+                         'id' => 1,
+                         'moves' => []
+                     },
+                     'players' => [
+                         {
+                             'id' => 1,
+                             'username' => "lucas"
+                         }
+                     ],
+                     'currentPlayer' => nil
+                 })
+    end
+
+    context 'after createing a game' do
+      let!(:game) { Game.for(user) }
+
+      it 'returns the board serialized' do
+        get :show, {id: game.id}
+
+        expect(response).to have_http_status(:ok)
+        expect(json)
+            .to eq({
+                       'id' => game.id,
+                       'state' => 'waiting',
+                       'board' => {
+                           'id' => game.board.id,
+                           'moves' => []
+                       },
+                       'players' => [
+                           {
+                               'id' => 1,
+                               'username' => "lucas"
+                           }
+                       ],
+                       'currentPlayer' => nil
+                   })
+      end
+
+      it 'can not join the same board twice' do
+        post :join, {id: game.id}
+
+        expect(response).to have_http_status(:bad_request)
+
+        expect(game.users.count).not_to eq 2
+        expect(game.current_player).to be_nil
+      end
+
+      context 'with another player' do
+        let(:user2) { create :roberto }
+
+        before do
+          authenticate! user2
+
+          post :join, {id: game.id}
+        end
+
+        it 'can join a current game' do
+          expect(response).to have_http_status(:ok)
+
+          game.reload
+          expect(game.users.count).to eq 2
+          expect(game.current_player).to eq user2
+        end
+
+        context 'and make the first move' do
+          before do
+            post "/games/#{game.id}/moves", {x: 0, y: 0}
+          end
+
+          it 'makes the mark' do
+            game.reload
+            expect(game.current_player).to eq user1
+            expect(game.get(Position.center)).to eq user2
+          end
+        end
+      end
     end
   end
   context 'without a valid user' do
