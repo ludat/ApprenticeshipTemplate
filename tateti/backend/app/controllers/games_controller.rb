@@ -1,6 +1,7 @@
 class GamesController < ApplicationController
 
   include ExceptionHandler
+  include AuthorizationHelper
 
   def create
     user_id = token['user']['id']
@@ -21,16 +22,7 @@ class GamesController < ApplicationController
     render json: Game.find(params[:id])
   end
 
-  def encode(json)
-    JWT.encode(json, nil, 'none')
-  end
-
-  def decode(token)
-    JWT.decode(token, nil, false).first
-  end
-
-  def token
-    return decode request.headers['Authorization'].split(' ').last if request.headers['Authorization'].present?
-    raise UnauthorizedException, 'You are not authorized'
+  def index
+    render json: [], status: :ok
   end
 end

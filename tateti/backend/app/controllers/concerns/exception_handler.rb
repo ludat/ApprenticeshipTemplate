@@ -8,6 +8,8 @@ module ExceptionHandler
       render json: {error: e.message}, status: :bad_request
     rescue ActiveRecord::RecordNotFound => e
       render json: {error: e.message}, status: :not_found
+    rescue Game::NotYourTurnException => e
+      render json: {error: e.message}, status: :forbidden
     rescue UnauthorizedException => e
       render json: {error: e.message}, status: :unauthorized
     end

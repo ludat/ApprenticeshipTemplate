@@ -6,7 +6,7 @@ class Board < ActiveRecord::Base
     move = moves.find_by(x: position.x, y: position.y)
 
     if move.nil?
-      ' '
+      nil
     else
       move.user
     end

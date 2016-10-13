@@ -22,13 +22,11 @@ ActiveRecord::Schema.define(version: 20161006214430) do
   add_index "boards", ["game_id"], name: "index_boards_on_game_id"
 
   create_table "games", force: :cascade do |t|
-    t.integer  "board_id"
     t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  add_index "games", ["board_id"], name: "index_games_on_board_id"
   add_index "games", ["user_id"], name: "index_games_on_user_id"
 
   create_table "games_users", id: false, force: :cascade do |t|

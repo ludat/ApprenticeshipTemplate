@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe GamesController, type: :controller do
-
   context 'with a valid user' do
     let(:user) { create :lucas }
 
@@ -82,18 +81,38 @@ RSpec.describe GamesController, type: :controller do
           expect(game.users.count).to eq 2
           expect(game.current_player).to eq user2
         end
+      end
+    end
 
-        context 'and make the first move' do
-          before do
-            post "/games/#{game.id}/moves", {x: 0, y: 0}
-          end
+    context 'with no games created' do
+      subject do
+        get :index, {state: 'waiting'}
+      end
 
-          it 'makes the mark' do
-            game.reload
-            expect(game.current_player).to eq user1
-            expect(game.get(Position.center)).to eq user2
-          end
-        end
+      it 'can list them to play one' do
+        subject
+
+        expect(json).to eq([])
+      end
+    end
+
+    context 'with some other games created' do
+      let(:user1) { create :roberto }
+      let(:user2) { create :juan }
+
+      before do
+        Game.for(user1)
+        Game.for(user2)
+      end
+
+      subject do
+        get :index, {state: 'waiting'}
+      end
+
+      it 'can list them to play one' do
+        subject
+
+        expect(json).to eq([])
       end
     end
   end

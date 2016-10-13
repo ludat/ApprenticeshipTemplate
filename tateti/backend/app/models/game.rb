@@ -10,8 +10,9 @@ class Game < ActiveRecord::Base
     Game.create!(players: users, board: Board.create!)
   end
 
-  def mark(position)
+  def mark(position, player)
     validate_mark(position)
+    raise NotYourTurnException, 'It is not your turn' if player != current_player
 
     board.set(position, current_player)
 
@@ -19,9 +20,9 @@ class Game < ActiveRecord::Base
     save!
   end
 
-  def validate_mark(pos)
-    raise TicTacToeException, "That's not a valid position" if board.occupied?(pos)
-    raise TicTacToeException, 'The game has already ended' if self.ended?
+  def validate_mark(position)
+    raise InvalidPositionException, "That's not a valid position" if board.occupied?(position)
+    raise EndedException, 'The game has already ended' if self.ended?
   end
 
   def get(position)
@@ -82,4 +83,12 @@ class Game < ActiveRecord::Base
     players.all.find { |player| player != current_player }
   end
 
+  class NotYourTurnException < Exception
+  end
+
+  class InvalidPositionException < Exception
+  end
+
+  class EndedException < Exception
+  end
 end

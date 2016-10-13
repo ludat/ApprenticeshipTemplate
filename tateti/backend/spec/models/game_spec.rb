@@ -9,7 +9,7 @@ RSpec.describe Game, type: :model do
   end
 
   context "after the first move" do
-    before { game.mark(Position.down) }
+    before { game.mark(Position.down, user1) }
 
     it "shouldn't be is_empty" do
       expect(game).not_to be_empty
@@ -19,17 +19,17 @@ RSpec.describe Game, type: :model do
     end
 
     it "shouldn't be able to mark a marked position" do
-      expect {game.mark(Position.down)}.to raise_error(TicTacToeException, "That's not a valid position")
+      expect {game.mark(Position.down, user1)}.to raise_error Game::InvalidPositionException
     end
 
   end
 
   context "One turn from finishing the game" do
     before do
-      game.mark(Position.up)
-      game.mark(Position.down)
-      game.mark(Position.upLeft)
-      game.mark(Position.downLeft)
+      game.mark(Position.up, user1)
+      game.mark(Position.down, user2)
+      game.mark(Position.upLeft, user1)
+      game.mark(Position.downLeft, user2)
     end
 
     it "should not end if less than three moves by each player were made" do
@@ -41,14 +41,14 @@ RSpec.describe Game, type: :model do
     end
 
     context "After 'X' player has won" do
-      before { game.mark(Position.upRight) }
+      before { game.mark(Position.upRight, user1) }
 
       it "The game should end" do
         expect(game).to be_ended
       end
 
       it "should not be able to mark anything" do
-        expect{ game.mark(Position.downRight) }.to raise_error(TicTacToeException, 'The game has already ended')
+        expect{ game.mark(Position.downRight, game.current_player) }.to raise_error Game::EndedException
       end
 
       it "should be able to tell who won " do
@@ -58,15 +58,15 @@ RSpec.describe Game, type: :model do
   end
   context "for a tied game" do
     before do
-      game.mark(Position.down)
-      game.mark(Position.downLeft)
-      game.mark(Position.upLeft)
-      game.mark(Position.downRight)
-      game.mark(Position.upRight)
-      game.mark(Position.center)
-      game.mark(Position.left)
-      game.mark(Position.up)
-      game.mark(Position.right)
+      game.mark(Position.down, user1)
+      game.mark(Position.downLeft, user2)
+      game.mark(Position.upLeft, user1)
+      game.mark(Position.downRight, user2)
+      game.mark(Position.upRight, user1)
+      game.mark(Position.center, user2)
+      game.mark(Position.left, user1)
+      game.mark(Position.up, user2)
+      game.mark(Position.right, user1)
     end
     it "should be marked as ended" do
       expect(game.ended?).to eql true
