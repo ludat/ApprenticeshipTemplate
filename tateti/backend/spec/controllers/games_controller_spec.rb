@@ -86,7 +86,7 @@ RSpec.describe GamesController, type: :controller do
 
     context 'with no games created' do
       subject do
-        get :index, {state: 'waiting'}
+        get :index
       end
 
       it 'can list them to play one' do
@@ -99,20 +99,23 @@ RSpec.describe GamesController, type: :controller do
     context 'with some other games created' do
       let(:user1) { create :roberto }
       let(:user2) { create :juan }
+      let(:user3) { create :user, username: 'damian' }
 
       before do
+        Game.for(user)
         Game.for(user1)
-        Game.for(user2)
+        g = Game.for(user2)
+        g.join user3
       end
 
       subject do
-        get :index, {state: 'waiting'}
+        get :index
       end
 
       it 'can list them to play one' do
         subject
 
-        expect(json).to eq([])
+        expect(json).to have_attributes(size: 3)
       end
     end
   end

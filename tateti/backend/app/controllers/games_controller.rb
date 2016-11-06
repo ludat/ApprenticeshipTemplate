@@ -23,6 +23,6 @@ class GamesController < ApplicationController
   end
 
   def index
-    render json: [], status: :ok
+    render json: Game.all
   end
 end

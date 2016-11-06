@@ -39,7 +39,7 @@ class Game < ActiveRecord::Base
 
   def board_is_full
     Position.all.all? { |pos|
-      not board.empty?(pos)
+      not board.empty_position?(pos)
     }
   end
 
@@ -75,7 +75,7 @@ class Game < ActiveRecord::Base
 
   def empty?
     Position.all.all? { |pos|
-      board.empty?(pos)
+      board.empty_position?(pos)
     }
   end
 

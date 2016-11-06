@@ -16,7 +16,7 @@ class Board < ActiveRecord::Base
     moves.exists?(x: position.x, y: position.y)
   end
 
-  def empty?(position)
+  def empty_position?(position)
     not occupied?(position)
   end
 
